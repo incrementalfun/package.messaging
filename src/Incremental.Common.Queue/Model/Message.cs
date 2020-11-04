@@ -15,7 +15,7 @@ namespace Incremental.Common.Queue.Model
         /// <summary>
         /// External event.
         /// </summary>
-        public IExternalEvent EventData { get; set; }
+        public object EventData { get; set; }
 
         /// <summary>
         /// Creates a new message from an external event.

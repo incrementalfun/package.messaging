@@ -1,4 +1,5 @@
-﻿using Amazon.Extensions.NETCore.Setup;
+﻿using Amazon;
+using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.SQS;
 using Incremental.Common.Queue.Service;
@@ -23,6 +24,7 @@ namespace Incremental.Common.Queue
         {
             services.AddDefaultAWSOptions(new AWSOptions
             {
+                Region = RegionEndpoint.EUWest1,
                 Credentials = new BasicAWSCredentials(configuration["AWS_ACCESS_KEY"], configuration["AWS_SECRET_KEY"])
             });
 
@@ -42,6 +44,7 @@ namespace Incremental.Common.Queue
         {
             services.AddDefaultAWSOptions(new AWSOptions
             {
+                Region = RegionEndpoint.EUWest1,
                 Credentials = new BasicAWSCredentials(accessKey, secretKey)
             });
 

@@ -4,7 +4,7 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <PackageVersion>0.4.0</PackageVersion>
+        <PackageVersion>0.4.1</PackageVersion>
         <PackageId>Incremental.Common.Queue</PackageId>
         <Title>Common Queue Resources</Title>
         <Authors>Lucas Maximiliano Marino</Authors>

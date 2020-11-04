@@ -28,16 +28,19 @@ namespace Incremental.Common.Queue.Service
         }
 
         /// <inheritdoc />
-        public async Task Send(IExternalEvent @event, string queue, CancellationToken cancellationToken = default)
+        public async Task Send(string queue, IExternalEvent @event, string groupId, CancellationToken cancellationToken = default)
         {
             var message = JsonSerializer.Serialize(Message.FromExternalEvent(@event));
 
-            await Send(message, queue, cancellationToken);
+            await Send(message, queue, groupId, cancellationToken);
         }
 
-        private async Task Send(string message, string queue, CancellationToken cancellationToken)
+        private async Task Send(string message, string queue, string groupId, CancellationToken cancellationToken)
         {
-            var response = await _sqs.SendMessageAsync(new SendMessageRequest(queue, message), cancellationToken);
+            var response = await _sqs.SendMessageAsync(new SendMessageRequest(queue, message)
+            {
+                MessageGroupId = groupId
+            }, cancellationToken);
 
             if (string.IsNullOrWhiteSpace(response.MessageId))
             {

@@ -12,11 +12,12 @@ namespace Incremental.Common.Queue.Service.Contract
         /// <summary>
         /// Sends an event to the queues.
         /// </summary>
-        /// <param name="event"></param>
         /// <param name="queue"></param>
+        /// <param name="event"></param>
+        /// <param name="groupId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task Send(IExternalEvent @event, string queue, CancellationToken cancellationToken = default);
+        public Task Send(string queue, IExternalEvent @event, string groupId, CancellationToken cancellationToken = default);
         
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
@@ -39,7 +40,8 @@ namespace Incremental.Common.Queue.Service
         {
             var response = await _sqs.SendMessageAsync(new SendMessageRequest(queue, message)
             {
-                MessageGroupId = groupId
+                MessageGroupId = groupId,
+                MessageDeduplicationId = Guid.NewGuid().ToString()
             }, cancellationToken);
 
             if (string.IsNullOrWhiteSpace(response.MessageId))

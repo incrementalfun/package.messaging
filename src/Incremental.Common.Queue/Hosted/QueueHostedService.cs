@@ -43,7 +43,7 @@ namespace Incremental.Common.Queue.Hosted
 
             var sqs = serviceScope.ServiceProvider.GetRequiredService<IAmazonSQS>();
             var eventBus = serviceScope.ServiceProvider.GetRequiredService<IEventBus>();
-            
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 var response = await sqs.ReceiveMessageAsync(new ReceiveMessageRequest
@@ -56,11 +56,13 @@ namespace Incremental.Common.Queue.Hosted
 
                 if (_queueOptions.TypeDictionary.TryGetValue(message.EventType, out var type))
                 {
-                    var @event =  Convert.ChangeType(message.EventData, type);
+                    var @event = Convert.ChangeType(message.EventData, type);
 
                     try
                     {
                         await eventBus.Publish(@event as IExternalEvent);
+
+                        await sqs.DeleteMessageAsync(Queues.Services, response.Messages.First().ReceiptHandle, stoppingToken);
                     }
                     catch (Exception e)
                     {

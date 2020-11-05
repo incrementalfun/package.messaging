@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,8 +13,10 @@ using Message = Incremental.Common.Queue.Model.Message;
 
 namespace Incremental.Common.Queue.Service
 {
-    /// <inheritdoc />
-    public class QueueService : IQueueService
+    /// <summary>
+    /// Default implementation of IQueueSender and IQueueReceiver.
+    /// </summary>
+    public class QueueService : IQueueSender, IQueueReceiver
     {
         private readonly ILogger<QueueService> _logger;
         private readonly IAmazonSQS _sqs;
@@ -31,23 +35,62 @@ namespace Incremental.Common.Queue.Service
         /// <inheritdoc />
         public async Task Send(string queue, IExternalEvent @event, string groupId, CancellationToken cancellationToken = default)
         {
-            var message = JsonSerializer.Serialize(Message.FromExternalEvent(@event));
+            var message = Message.FromExternalEvent(@event);
 
-            await Send(message, queue, groupId, cancellationToken);
+            await Send(message.Body, message.MessageType, queue, groupId, cancellationToken);
         }
 
-        private async Task Send(string message, string queue, string groupId, CancellationToken cancellationToken)
+        private async Task Send(string message, string type, string queue, string groupId, CancellationToken cancellationToken)
         {
             var response = await _sqs.SendMessageAsync(new SendMessageRequest(queue, message)
             {
                 MessageGroupId = groupId,
-                MessageDeduplicationId = Guid.NewGuid().ToString()
+                MessageDeduplicationId = Guid.NewGuid().ToString(),
+                MessageAttributes = new Dictionary<string, MessageAttributeValue>
+                {
+                    {
+                        nameof(Message.MessageType), new MessageAttributeValue {StringValue = type}
+                    }
+                }
             }, cancellationToken);
 
             if (string.IsNullOrWhiteSpace(response.MessageId))
             {
                 _logger.LogWarning("Event has not been delivered to the queue (@message)", message);
             }
+        }
+        
+        /// <inheritdoc />
+        public async Task<Message> Receive(string queue, int quantity, CancellationToken cancellationToken = default)
+        {
+            var response = await _sqs.ReceiveMessageAsync(new ReceiveMessageRequest
+            {
+                QueueUrl = Queues.Services,
+                MaxNumberOfMessages = 1
+            }, cancellationToken);
+
+            var messageRaw = response.Messages.First();
+
+            if (messageRaw.MessageAttributes.TryGetValue(nameof(Message.MessageType), out var messageAttributeValue))
+            {
+                var message = new Message
+                {
+                    MessageId = messageRaw.MessageId,
+                    Body = messageRaw.Body,
+                    MessageType = messageAttributeValue.StringValue,
+                    ReceiptHandle = messageRaw.ReceiptHandle
+                };
+
+                return message;
+            }
+
+            return default;
+        }
+
+        /// <inheritdoc />
+        public async Task MarkAsDelivered(string queue, string receiptHandle, CancellationToken cancellationToken = default)
+        {
+            await _sqs.DeleteMessageAsync(Queues.Services, receiptHandle, cancellationToken);
         }
     }
 }

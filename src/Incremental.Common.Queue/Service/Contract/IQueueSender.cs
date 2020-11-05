@@ -5,9 +5,9 @@ using Incremental.Common.Sourcing.Events.Contract;
 namespace Incremental.Common.Queue.Service.Contract
 {
     /// <summary>
-    /// Queue service.
+    /// Queue sender service.
     /// </summary>
-    public interface IQueueService
+    public interface IQueueSender
     {
         /// <summary>
         /// Sends an event to the queues.
@@ -18,6 +18,5 @@ namespace Incremental.Common.Queue.Service.Contract
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public Task Send(string queue, IExternalEvent @event, string groupId, CancellationToken cancellationToken = default);
-        
     }
 }

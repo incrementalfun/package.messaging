@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using Incremental.Common.Queue.Hosted.Options;
+using Incremental.Common.Queue.Service.Contract;
 using Incremental.Common.Sourcing.Events.Contract;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,28 +43,22 @@ namespace Incremental.Common.Queue.Hosted
         {
             using var serviceScope = _scopeFactory.CreateScope();
 
-            var sqs = serviceScope.ServiceProvider.GetRequiredService<IAmazonSQS>();
+            var queueReceiver = serviceScope.ServiceProvider.GetRequiredService<IQueueReceiver>();
             var eventBus = serviceScope.ServiceProvider.GetRequiredService<IEventBus>();
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                var response = await sqs.ReceiveMessageAsync(new ReceiveMessageRequest
+                var message = await queueReceiver.Receive(Queues.Services, 1, stoppingToken);
+                
+                if (_queueOptions.TypeDictionary.TryGetValue(message.MessageType, out var type))
                 {
-                    QueueUrl = Queues.Services,
-                    MaxNumberOfMessages = 1
-                }, stoppingToken);
-
-                var message = Model.Message.FromSerialized(response.Messages.First().Body);
-
-                if (_queueOptions.TypeDictionary.TryGetValue(message.EventType, out var type))
-                {
-                    var @event = Convert.ChangeType(message.EventData, type);
+                    var @event = JsonSerializer.Deserialize(message.Body, type);
 
                     try
                     {
                         await eventBus.Publish(@event as IExternalEvent);
 
-                        await sqs.DeleteMessageAsync(Queues.Services, response.Messages.First().ReceiptHandle, stoppingToken);
+                        await queueReceiver.MarkAsDelivered(Queues.Services, message.ReceiptHandle, stoppingToken);
                     }
                     catch (Exception e)
                     {

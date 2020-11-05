@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.Text.Json;
 using Incremental.Common.Sourcing.Events.Contract;
 
 namespace Incremental.Common.Queue.Model
@@ -9,14 +10,38 @@ namespace Incremental.Common.Queue.Model
     public class Message
     {
         /// <summary>
-        /// Type of the event.
+        /// Attributes.
         /// </summary>
-        public string EventType { get; set; }
+        public Dictionary<string, string> Attributes { get; set; }
+        
         /// <summary>
-        /// External event.
+        /// Message id.
         /// </summary>
-        public object EventData { get; set; }
+        public string MessageId { get; set; }
+        
+        /// <summary>
+        /// Receipt handle id.
+        /// </summary>
+        public string ReceiptHandle { get; set; }
 
+        /// <summary>
+        /// Body of the message.
+        /// </summary>
+        public string Body { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public string MessageType { get; set; }
+        
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
+        public Message()
+        {
+            Attributes = new Dictionary<string, string>();
+        }
+        
         /// <summary>
         /// Creates a new message from an external event.
         /// </summary>
@@ -24,21 +49,14 @@ namespace Incremental.Common.Queue.Model
         /// <returns></returns>
         public static Message FromExternalEvent(IExternalEvent @event)
         {
-            return new Message
+            var message = new Message
             {
-                EventType = @event.GetType().AssemblyQualifiedName,
-                EventData = @event
+                MessageType = @event.GetType().AssemblyQualifiedName,
+                Body = JsonSerializer.Serialize(@event)
             };
+
+            return message;
         }
 
-        /// <summary>
-        /// Creates a new message from a serialized message.
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public static Message FromSerialized(string message)
-        {
-            return JsonSerializer.Deserialize<Message>(message);
-        }
     }
 }

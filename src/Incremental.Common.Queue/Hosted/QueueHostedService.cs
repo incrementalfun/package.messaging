@@ -49,8 +49,8 @@ namespace Incremental.Common.Queue.Hosted
             while (!stoppingToken.IsCancellationRequested)
             {
                 var message = await queueReceiver.Receive(Queues.Services, 1, stoppingToken);
-                
-                if (_queueOptions.TypeDictionary.TryGetValue(message.MessageType, out var type))
+
+                if (_queueOptions.TypeDictionary.TryGetValue(message.MessageType ?? string.Empty, out var type))
                 {
                     var @event = JsonSerializer.Deserialize(message.Body, type);
 

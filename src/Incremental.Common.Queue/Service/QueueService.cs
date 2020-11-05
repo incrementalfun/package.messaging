@@ -49,7 +49,11 @@ namespace Incremental.Common.Queue.Service
                 MessageAttributes = new Dictionary<string, MessageAttributeValue>
                 {
                     {
-                        nameof(Message.MessageType), new MessageAttributeValue {StringValue = type}
+                        nameof(Message.MessageType), new MessageAttributeValue
+                        {
+                            StringValue = type,
+                            DataType = "String"
+                        }
                     }
                 }
             }, cancellationToken);

@@ -69,6 +69,11 @@ namespace Incremental.Common.Queue.Service
                 MaxNumberOfMessages = 1
             }, cancellationToken);
 
+            if (!response.Messages.Any())
+            {
+                return new Message();
+            }
+            
             var messageRaw = response.Messages.First();
 
             if (messageRaw.MessageAttributes.TryGetValue(nameof(Message.MessageType), out var messageAttributeValue))
@@ -84,7 +89,7 @@ namespace Incremental.Common.Queue.Service
                 return message;
             }
 
-            return default;
+            return new Message();
         }
 
         /// <inheritdoc />

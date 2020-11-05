@@ -63,21 +63,22 @@ namespace Incremental.Common.Queue.Service
                 _logger.LogWarning("Event has not been delivered to the queue (@message)", message);
             }
         }
-        
+
         /// <inheritdoc />
         public async Task<Message> Receive(string queue, int quantity, CancellationToken cancellationToken = default)
         {
             var response = await _sqs.ReceiveMessageAsync(new ReceiveMessageRequest
             {
                 QueueUrl = Queues.Services,
-                MaxNumberOfMessages = 1
+                MaxNumberOfMessages = 1,
+                MessageAttributeNames = new List<string> {nameof(Message.MessageType)}
             }, cancellationToken);
 
             if (!response.Messages.Any())
             {
                 return new Message();
             }
-            
+
             var messageRaw = response.Messages.First();
 
             if (messageRaw.MessageAttributes.TryGetValue(nameof(Message.MessageType), out var messageAttributeValue))

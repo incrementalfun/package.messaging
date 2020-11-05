@@ -47,7 +47,7 @@ namespace Incremental.Common.Queue.Model
         /// </summary>
         /// <param name="event"></param>
         /// <returns></returns>
-        public static Message FromExternalEvent(IExternalEvent @event)
+        public static Message FromExternalEvent(object @event)
         {
             var message = new Message
             {

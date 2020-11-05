@@ -56,7 +56,9 @@ namespace Incremental.Common.Queue
         private static IServiceCollection RegisterQueues(this IServiceCollection services)
         {
             services.AddAWSService<IAmazonSQS>();
+            
             services.AddScoped<IQueueSender, QueueService>();
+            services.AddScoped<IQueueReceiver, QueueService>();
 
             return services;
         }

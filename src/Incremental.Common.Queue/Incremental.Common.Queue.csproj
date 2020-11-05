@@ -4,7 +4,7 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <PackageVersion>0.7.0</PackageVersion>
+        <PackageVersion>0.7.1</PackageVersion>
         <PackageId>Incremental.Common.Queue</PackageId>
         <Title>Common Queue Resources</Title>
         <Authors>Lucas Maximiliano Marino</Authors>
@@ -19,7 +19,7 @@
 
     <ItemGroup>
         <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
-        <PackageReference Include="AWSSDK.SQS" Version="3.5.0.34" />
+        <PackageReference Include="AWSSDK.SQS" Version="3.5.0.35" />
         <PackageReference Include="Incremental.Common.Sourcing" Version="1.0.0" />
     </ItemGroup>
 

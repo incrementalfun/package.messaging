@@ -55,6 +55,12 @@ namespace Incremental.Common.Queue.Hosted
                 {
                     var message = await queueReceiver.Receive(Queues.Services, 1, stoppingToken);
 
+                    if (string.IsNullOrWhiteSpace(message.MessageId))
+                    {
+                        messagesInQueue = 0;
+                        continue;
+                    }
+                    
                     if (_queueOptions.TypeDictionary.TryGetValue(message.MessageType ?? string.Empty, out var type))
                     {
                         using var innerServiceScope = _scopeFactory.CreateScope();

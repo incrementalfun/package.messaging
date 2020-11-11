@@ -41,29 +41,41 @@ namespace Incremental.Common.Queue.Hosted
         /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using var serviceScope = _scopeFactory.CreateScope();
+            using var outerServiceScope = _scopeFactory.CreateScope();
 
-            var queueReceiver = serviceScope.ServiceProvider.GetRequiredService<IQueueReceiver>();
-            var eventBus = serviceScope.ServiceProvider.GetRequiredService<IEventBus>();
+            var queueReceiver = outerServiceScope.ServiceProvider.GetRequiredService<IQueueReceiver>();
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                var message = await queueReceiver.Receive(Queues.Services, 1, stoppingToken);
+                await Task.Delay(5000, stoppingToken);
 
-                if (_queueOptions.TypeDictionary.TryGetValue(message.MessageType ?? string.Empty, out var type))
+                var messagesInQueue = await queueReceiver.Count(Queues.Services, stoppingToken);
+
+                while (messagesInQueue > 0)
                 {
-                    var @event = JsonSerializer.Deserialize(message.Body, type);
+                    var message = await queueReceiver.Receive(Queues.Services, 1, stoppingToken);
 
-                    try
+                    if (_queueOptions.TypeDictionary.TryGetValue(message.MessageType ?? string.Empty, out var type))
                     {
-                        await eventBus.Publish(@event as IExternalEvent);
+                        using var innerServiceScope = _scopeFactory.CreateScope();
+                        
+                        var eventBus = innerServiceScope.ServiceProvider.GetRequiredService<IEventBus>();
 
-                        await queueReceiver.MarkAsDelivered(Queues.Services, message.ReceiptHandle, stoppingToken);
+                        var @event = JsonSerializer.Deserialize(message.Body, type);
+
+                        try
+                        {
+                            await eventBus.Publish(@event as IExternalEvent);
+
+                            await queueReceiver.MarkAsDelivered(Queues.Services, message.ReceiptHandle, stoppingToken);
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e, "Unhandled exception handling external event from queue. (@event)", @event);
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(e, "Unhandled exception handling external event from queue. (@event)", @event);
-                    }
+                    
+                    messagesInQueue--;
                 }
             }
         }

@@ -11,6 +11,14 @@ namespace Incremental.Common.Queue.Service.Contract
     public interface IQueueReceiver
     {
         /// <summary>
+        /// Count of how many messages are in the queue right now.
+        /// </summary>
+        /// <param name="queue"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public Task<int> Count(string queue, CancellationToken cancellationToken = default);
+        
+        /// <summary>
         /// Receives a specified quantity of messages from the queue.
         /// </summary>
         /// <param name="queue"></param>

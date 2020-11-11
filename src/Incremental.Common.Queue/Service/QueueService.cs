@@ -33,6 +33,15 @@ namespace Incremental.Common.Queue.Service
         }
 
         /// <inheritdoc />
+        public async Task<int> Count(string queue, CancellationToken cancellationToken = default)
+        {
+            var attributes = await _sqs.GetQueueAttributesAsync(Queues.Services, new List<string> {QueueAttributeName.ApproximateNumberOfMessages},
+                cancellationToken);
+
+            return attributes.ApproximateNumberOfMessages;
+        }
+
+        /// <inheritdoc />
         public async Task Send(string queue, IExternalEvent @event, string groupId, CancellationToken cancellationToken = default)
         {
             var message = Message.FromExternalEvent(@event);

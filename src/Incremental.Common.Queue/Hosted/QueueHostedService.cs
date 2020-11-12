@@ -49,10 +49,14 @@ namespace Incremental.Common.Queue.Hosted
             {
                 await Task.Delay(5000, stoppingToken);
 
+                _logger.LogInformation("Counting messages in queue.");
+                
                 var messagesInQueue = await queueReceiver.Count(Queues.Services, stoppingToken);
 
                 while (messagesInQueue > 0)
                 {
+                    _logger.LogInformation("Found {Count} messages in queue.", messagesInQueue);
+
                     var message = await queueReceiver.Receive(Queues.Services, 1, stoppingToken);
 
                     if (string.IsNullOrWhiteSpace(message.MessageId))

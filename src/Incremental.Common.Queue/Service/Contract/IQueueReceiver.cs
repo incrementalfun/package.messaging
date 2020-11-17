@@ -1,14 +1,13 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Queue.Model;
-using Incremental.Common.Sourcing.Events.Contract;
 
 namespace Incremental.Common.Queue.Service.Contract
 {
     /// <summary>
     /// Queue receiver service.
     /// </summary>
-    public interface IQueueReceiver
+    internal interface IQueueReceiver
     {
         /// <summary>
         /// Count of how many messages are in the queue right now.
@@ -17,7 +16,9 @@ namespace Incremental.Common.Queue.Service.Contract
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public Task<int> Count(string queue, CancellationToken cancellationToken = default);
-        
+
+        public Task<TimeSpan> GetVisibilityTimeSpan(string queue, CancellationToken cancellationToken = default);
+
         /// <summary>
         /// Receives a specified quantity of messages from the queue.
         /// </summary>
@@ -25,15 +26,6 @@ namespace Incremental.Common.Queue.Service.Contract
         /// <param name="quantity"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task<Message> Receive(string queue, int quantity, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Marks a retrieved message as delivered.
-        /// </summary>
-        /// <param name="queue"></param>
-        /// <param name="receiptHandle"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task MarkAsDelivered(string queue, string receiptHandle, CancellationToken cancellationToken = default);
+        public Task<(string body, string type, (string queue, string id) receipt)> Receive(string queue, int quantity, CancellationToken cancellationToken = default);
     }
 }

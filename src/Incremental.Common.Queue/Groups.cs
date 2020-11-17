@@ -5,7 +5,7 @@ namespace Incremental.Common.Queue
     /// <summary>
     /// Group reference.
     /// </summary>
-    public static class Groups
+    internal static class Groups
     {
         /// <summary>
         /// Default group.

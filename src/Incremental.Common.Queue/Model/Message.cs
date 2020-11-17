@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
-using Incremental.Common.Sourcing.Events.Contract;
 
 namespace Incremental.Common.Queue.Model
 {
@@ -57,6 +56,5 @@ namespace Incremental.Common.Queue.Model
 
             return message;
         }
-
     }
 }

@@ -1,9 +1,14 @@
-﻿using Amazon;
+﻿using System.Linq;
+using System.Reflection;
+using Amazon;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.SQS;
+using Incremental.Common.Queue.Message;
+using Incremental.Common.Queue.Message.Contract;
 using Incremental.Common.Queue.Service;
 using Incremental.Common.Queue.Service.Contract;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +25,7 @@ namespace Incremental.Common.Queue
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static IServiceCollection AddQueues(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddQueues(this IServiceCollection services, IConfiguration configuration, params Assembly[] assemblies)
         {
             services.AddDefaultAWSOptions(new AWSOptions
             {
@@ -28,7 +33,7 @@ namespace Incremental.Common.Queue
                 Credentials = new BasicAWSCredentials(configuration["AWS_ACCESS_KEY"], configuration["AWS_SECRET_KEY"])
             });
 
-            services.RegisterQueues();
+            services.RegisterQueues(assemblies);
             
             return services;
         }
@@ -40,7 +45,7 @@ namespace Incremental.Common.Queue
         /// <param name="accessKey"></param>
         /// <param name="secretKey"></param>
         /// <returns></returns>
-        public static IServiceCollection AddQueues(this IServiceCollection services, string accessKey, string secretKey)
+        public static IServiceCollection AddQueues(this IServiceCollection services, string accessKey, string secretKey, params Assembly[] assemblies)
         {
             services.AddDefaultAWSOptions(new AWSOptions
             {
@@ -48,13 +53,17 @@ namespace Incremental.Common.Queue
                 Credentials = new BasicAWSCredentials(accessKey, secretKey)
             });
 
-            services.RegisterQueues();
+            services.RegisterQueues(assemblies);
             
             return services;
         }
 
-        private static IServiceCollection RegisterQueues(this IServiceCollection services)
+        private static IServiceCollection RegisterQueues(this IServiceCollection services, params Assembly[] assemblies)
         {
+            services.AddMediatR(assemblies);
+            
+            services.AddScoped<IMessageBus, MessageBus>();
+            
             services.AddAWSService<IAmazonSQS>();
             
             services.AddScoped<IQueueSender, QueueService>();

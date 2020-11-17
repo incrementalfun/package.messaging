@@ -1,18 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Amazon.SQS;
-using Amazon.SQS.Model;
-using Incremental.Common.Queue.Hosted.Options;
+using Incremental.Common.Queue.Message.Contract;
 using Incremental.Common.Queue.Service.Contract;
-using Incremental.Common.Sourcing.Events.Contract;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Incremental.Common.Queue.Hosted
 {
@@ -23,70 +20,73 @@ namespace Incremental.Common.Queue.Hosted
     {
         private readonly ILogger<QueueHostedService> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
-        private readonly QueueOptions _queueOptions;
+        private readonly Dictionary<string, Type> _messageTypes;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="scopeFactory"></param>
-        /// <param name="queueOptions"></param>
-        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IOptions<QueueOptions> queueOptions)
+        /// <param name="messageTypes"></param>
+        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IEnumerable<IMessage> messageTypes)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
-            _queueOptions = queueOptions.Value;
+            _messageTypes = messageTypes.ToDictionary(e => e.GetType().FullName, e => e.GetType());
         }
 
         /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            using var outerServiceScope = _scopeFactory.CreateScope();
+
             try
             {
-                using var outerServiceScope = _scopeFactory.CreateScope();
-
                 var queueReceiver = outerServiceScope.ServiceProvider.GetRequiredService<IQueueReceiver>();
+
+                var visibility = await queueReceiver.GetVisibilityTimeSpan(Queues.Services, stoppingToken);
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     await Task.Delay(5000, stoppingToken);
 
-                    _logger.LogInformation("Counting messages in queue.");
-                
                     var messagesInQueue = await queueReceiver.Count(Queues.Services, stoppingToken);
 
                     while (messagesInQueue > 0)
                     {
-                        _logger.LogInformation("Found {Count} messages in queue.", messagesInQueue);
+                        _logger.LogDebug("Found {Count} messages in queue.", messagesInQueue);
 
                         var message = await queueReceiver.Receive(Queues.Services, 1, stoppingToken);
 
-                        if (string.IsNullOrWhiteSpace(message.MessageId))
+                        var cancellationTokenSource = new CancellationTokenSource(visibility.Subtract(TimeSpan.FromSeconds(5)));
+
+                        if (string.IsNullOrWhiteSpace(message.receipt.id))
                         {
                             messagesInQueue = 0;
                             continue;
                         }
-                    
-                        if (_queueOptions.TypeDictionary.TryGetValue(message.MessageType ?? string.Empty, out var type))
+
+                        if (_messageTypes.TryGetValue(message.type ?? string.Empty, out var type))
                         {
                             using var innerServiceScope = _scopeFactory.CreateScope();
-                        
-                            var eventBus = innerServiceScope.ServiceProvider.GetRequiredService<IEventBus>();
 
-                            var @event = JsonSerializer.Deserialize(message.Body, type);
+                            var sender = innerServiceScope.ServiceProvider.GetRequiredService<ISender>();
 
-                            try
+                            if (JsonSerializer.Deserialize(message.body, type) is IMessage request)
                             {
-                                await eventBus.Publish(@event as IExternalEvent);
+                                request.Receipt = message.receipt;
 
-                                await queueReceiver.MarkAsDelivered(Queues.Services, message.ReceiptHandle, stoppingToken);
-                            }
-                            catch (Exception e)
-                            {
-                                _logger.LogError(e, "Unhandled exception handling external event from queue. (@event)", @event);
+                                try
+                                {
+                                    await sender.Send(request, cancellationTokenSource.Token);
+                                }
+                                catch (Exception e)
+                                {
+                                    _logger.LogError(e, "Unhandled exception handling message from queue. ({@message})", message);
+                                }
                             }
                         }
-                    
+
                         messagesInQueue--;
                     }
                 }

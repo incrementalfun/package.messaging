@@ -24,6 +24,7 @@ namespace Incremental.Common.Queue
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
+        /// <param name="assemblies"></param>
         /// <returns></returns>
         public static IServiceCollection AddQueues(this IServiceCollection services, IConfiguration configuration, params Assembly[] assemblies)
         {
@@ -44,6 +45,7 @@ namespace Incremental.Common.Queue
         /// <param name="services"></param>
         /// <param name="accessKey"></param>
         /// <param name="secretKey"></param>
+        /// <param name="assemblies"></param>
         /// <returns></returns>
         public static IServiceCollection AddQueues(this IServiceCollection services, string accessKey, string secretKey, params Assembly[] assemblies)
         {

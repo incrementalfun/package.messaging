@@ -59,7 +59,7 @@ namespace Incremental.Common.Queue.Service
 
             if (message.MessageAttributes.TryGetValue(nameof(Type), out var typeAttribute) && !string.IsNullOrWhiteSpace(typeAttribute.StringValue))
             {
-                return (message.Body, typeAttribute.StringValue, (queue, message.MessageId));
+                return (message.Body, typeAttribute.StringValue, (queue, message.ReceiptHandle));
             }
 
             return default;

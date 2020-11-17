@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Incremental.Common.Queue.Message.Contract
@@ -17,6 +18,16 @@ namespace Incremental.Common.Queue.Message.Contract
         /// <typeparam name="TMessage"></typeparam>
         /// <returns></returns>
         Task Send<TMessage>(string queue, TMessage message, CancellationToken cancellationToken = default) where TMessage : IMessage;
+        
+        /// <summary>
+        /// Send multiple messages to the queue.
+        /// </summary>
+        /// <param name="queue"></param>
+        /// <param name="messages"></param>
+        /// <param name="cancellationToken"></param>
+        /// <typeparam name="TMessage"></typeparam>
+        /// <returns></returns>
+        Task Send<TMessage>(string queue, IEnumerable<TMessage> messages, CancellationToken cancellationToken = default) where TMessage : IMessage;
 
         /// <summary>
         /// When called signals to the queue that a message has been handled.

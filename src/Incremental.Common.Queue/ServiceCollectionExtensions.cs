@@ -4,6 +4,8 @@ using Amazon;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.SQS;
+using Incremental.Common.Queue.Channel;
+using Incremental.Common.Queue.Channel.Contract;
 using Incremental.Common.Queue.Message;
 using Incremental.Common.Queue.Message.Contract;
 using Incremental.Common.Queue.Service;
@@ -57,6 +59,22 @@ namespace Incremental.Common.Queue
 
             services.RegisterQueues(assemblies);
             
+            return services;
+        }
+
+        /// <summary>
+        /// Registers a channel queue.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IServiceCollection AddChannelQueue<T>(this IServiceCollection services)
+        {
+            services.AddSingleton<ChannelQueue<T>>();
+
+            services.AddScoped<IQueueReader<T>>(serviceProvider => serviceProvider.GetRequiredService<ChannelQueue<T>>());
+            services.AddScoped<IQueueWriter<T>>(serviceProvider => serviceProvider.GetRequiredService<ChannelQueue<T>>());
+
             return services;
         }
 

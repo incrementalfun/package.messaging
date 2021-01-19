@@ -66,26 +66,7 @@ namespace Incremental.Common.Queue.Hosted
                             continue;
                         }
 
-                        if (_messageTypes.TryGetValue(message.type ?? string.Empty, out var type))
-                        {
-                            using var innerServiceScope = _scopeFactory.CreateScope();
-
-                            var sender = innerServiceScope.ServiceProvider.GetRequiredService<ISender>();
-
-                            if (JsonSerializer.Deserialize(message.body, type) is IMessage request)
-                            {
-                                request.Receipt = message.receipt;
-
-                                try
-                                {
-                                    await sender.Send(request, cancellationTokenSource.Token);
-                                }
-                                catch (Exception e)
-                                {
-                                    _logger.LogError(e, "Unhandled exception handling message from queue. ({@message})", message);
-                                }
-                            }
-                        }
+                        await TryHandleMessage(message, cancellationTokenSource);
 
                         messagesInQueue--;
                     }
@@ -95,6 +76,36 @@ namespace Incremental.Common.Queue.Hosted
             {
                 _logger.LogCritical(e, "Unhandled critical exception receiving external events from queue");
             }
+        }
+
+        private async Task TryHandleMessage((string body, string type, (string queue, string id) receipt) message,
+            CancellationTokenSource cancellationTokenSource)
+        {
+            if (MessageTypeIsRegistered(message, out var type))
+            {
+                using var innerServiceScope = _scopeFactory.CreateScope();
+
+                var sender = innerServiceScope.ServiceProvider.GetRequiredService<ISender>();
+
+                if (JsonSerializer.Deserialize(message.body, type) is IMessage request)
+                {
+                    request.Receipt = message.receipt;
+
+                    try
+                    {
+                        await sender.Send(request, cancellationTokenSource.Token);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "Unhandled exception handling message from queue. ({@Message})", message);
+                    }
+                }
+            }
+        }
+
+        private bool MessageTypeIsRegistered((string body, string type, (string queue, string id) receipt) message, out Type type)
+        {
+            return _messageTypes.TryGetValue(message.type ?? string.Empty, out type);
         }
     }
 }

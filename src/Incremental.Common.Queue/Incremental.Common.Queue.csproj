@@ -3,14 +3,14 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <PackageVersion>1.1.0</PackageVersion>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageVersion>1.1.1</PackageVersion>
         <PackageId>Incremental.Common.Queue</PackageId>
         <Title>Common Queue Resources</Title>
         <Authors>Lucas Maximiliano Marino</Authors>
-        <PackageProjectUrl>https://github.com/incrementalspace/package.queue</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/incrementalspace/package.queue</RepositoryUrl>
-        <Copyright>Copyright © Lucas Maximiliano Marino 2020</Copyright>
+        <PackageProjectUrl>https://github.com/incrementalfun/package.queue</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/incrementalfun/package.queue</RepositoryUrl>
+        <Copyright>Copyright © Lucas Maximiliano Marino 2021</Copyright>
     </PropertyGroup>
 
     <ItemGroup>

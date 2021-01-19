@@ -54,7 +54,7 @@ namespace Incremental.Common.Queue.Hosted
 
                     while (messagesInQueue > 0)
                     {
-                        _logger.LogDebug("Found {Count} messages in queue.", messagesInQueue);
+                        _logger.LogDebug("Found {Count} messages in queue", messagesInQueue);
 
                         var message = await queueReceiver.Receive(Queues.Services, 1, stoppingToken);
 
@@ -93,7 +93,7 @@ namespace Incremental.Common.Queue.Hosted
             }
             catch (Exception e)
             {
-                _logger.LogCritical(e, "Unhandled critical exception receiving external events from queue.");
+                _logger.LogCritical(e, "Unhandled critical exception receiving external events from queue");
             }
         }
     }

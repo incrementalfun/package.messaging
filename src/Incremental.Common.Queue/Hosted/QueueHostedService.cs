@@ -28,7 +28,7 @@ namespace Incremental.Common.Queue.Hosted
         /// <param name="logger"></param>
         /// <param name="scopeFactory"></param>
         /// <param name="messageTypes"></param>
-        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IEnumerable<IMessage> messageTypes)
+        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IEnumerable<Message.Contract.Message> messageTypes)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
@@ -87,9 +87,9 @@ namespace Incremental.Common.Queue.Hosted
 
                 var sender = innerServiceScope.ServiceProvider.GetRequiredService<ISender>();
 
-                if (JsonSerializer.Deserialize(message.body, type) is IMessage request)
+                if (JsonSerializer.Deserialize(message.body, type) is Message.Contract.Message request)
                 {
-                    request.Receipt = message.receipt;
+                    request = request with {Receipt = message.receipt};
 
                     try
                     {

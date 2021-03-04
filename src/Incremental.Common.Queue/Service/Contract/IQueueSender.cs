@@ -17,7 +17,7 @@ namespace Incremental.Common.Queue.Service.Contract
         /// <param name="groupId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task Send(string queue, IMessage message, string groupId, CancellationToken cancellationToken = default);
+        public Task Send(string queue, Message.Contract.Message message, string groupId, CancellationToken cancellationToken = default);
         
         /// <summary>
         /// Marks a retrieved message as delivered.

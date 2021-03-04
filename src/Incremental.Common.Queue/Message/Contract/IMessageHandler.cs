@@ -6,7 +6,7 @@ namespace Incremental.Common.Queue.Message.Contract
     /// Message handler.
     /// </summary>
     /// <typeparam name="TMessage"></typeparam>
-    public interface IMessageHandler<in TMessage> : IRequestHandler<TMessage> where TMessage : IMessage
+    public interface IMessageHandler<in TMessage> : IRequestHandler<TMessage> where TMessage : Message
     {
         
     }

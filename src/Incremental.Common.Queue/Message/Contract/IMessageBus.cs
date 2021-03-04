@@ -17,7 +17,7 @@ namespace Incremental.Common.Queue.Message.Contract
         /// <param name="cancellationToken"></param>
         /// <typeparam name="TMessage"></typeparam>
         /// <returns></returns>
-        Task Send<TMessage>(string queue, TMessage message, CancellationToken cancellationToken = default) where TMessage : IMessage;
+        Task Send<TMessage>(string queue, TMessage message, CancellationToken cancellationToken = default) where TMessage : Message;
         
         /// <summary>
         /// Send multiple messages to the queue.
@@ -27,7 +27,7 @@ namespace Incremental.Common.Queue.Message.Contract
         /// <param name="cancellationToken"></param>
         /// <typeparam name="TMessage"></typeparam>
         /// <returns></returns>
-        Task Send<TMessage>(string queue, IEnumerable<TMessage> messages, CancellationToken cancellationToken = default) where TMessage : IMessage;
+        Task Send<TMessage>(string queue, IEnumerable<TMessage> messages, CancellationToken cancellationToken = default) where TMessage : Message;
 
         /// <summary>
         /// When called signals to the queue that a message has been handled.

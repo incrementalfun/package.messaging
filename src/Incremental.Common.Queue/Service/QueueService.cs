@@ -65,7 +65,7 @@ namespace Incremental.Common.Queue.Service
             return default;
         }
 
-        public async Task Send(string queue, IMessage message, string groupId, CancellationToken cancellationToken = default)
+        public async Task Send(string queue, Message.Contract.Message message, string groupId, CancellationToken cancellationToken = default)
         {
             var type = message.GetType().FullName;
             var body = JsonSerializer.Serialize(message as object);

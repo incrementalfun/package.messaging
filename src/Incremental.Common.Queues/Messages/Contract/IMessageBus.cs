@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Incremental.Common.Queues.Message.Contract
+namespace Incremental.Common.Queues.Messages.Contract
 {
     /// <summary>
     ///     Bus for sending message requests.

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Incremental.Common.Queues.Message.Contract
+namespace Incremental.Common.Queues.Messages.Contract
 {
     /// <summary>
     ///     Message handler.

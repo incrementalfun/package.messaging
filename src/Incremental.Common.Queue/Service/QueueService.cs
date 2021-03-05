@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Incremental.Common.Queue.Service
 {
-    internal class QueueService : IQueueSender, IQueueReceiver
+    public class QueueService : IQueueSender, IQueueReceiver
     {
         private readonly ILogger<QueueService> _logger;
         private readonly IAmazonSQS _sqs;

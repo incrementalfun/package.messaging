@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incremental.Common.Queue", "Incremental.Common.Queue\Incremental.Common.Queue.csproj", "{234C54C2-7D4A-48C2-8BB9-8E64AD4EF152}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incremental.Common.Queue.DependencyInjection", "Incremental.Common.Queue.DependencyInjection\Incremental.Common.Queue.DependencyInjection.csproj", "{2C38AE96-C0C7-499D-8001-269113FD172B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{234C54C2-7D4A-48C2-8BB9-8E64AD4EF152}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{234C54C2-7D4A-48C2-8BB9-8E64AD4EF152}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{234C54C2-7D4A-48C2-8BB9-8E64AD4EF152}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C38AE96-C0C7-499D-8001-269113FD172B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C38AE96-C0C7-499D-8001-269113FD172B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C38AE96-C0C7-499D-8001-269113FD172B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C38AE96-C0C7-499D-8001-269113FD172B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -8,6 +8,7 @@ using Amazon.SQS;
 using Amazon.SQS.Model;
 using Incremental.Common.Queues.Service.Contract;
 using Microsoft.Extensions.Logging;
+using Message = Incremental.Common.Queues.Messages.Message;
 
 namespace Incremental.Common.Queues.Service
 {
@@ -60,7 +61,7 @@ namespace Incremental.Common.Queues.Service
             return default;
         }
 
-        public async Task Send(string queue, Messages.Message message, string groupId, CancellationToken cancellationToken = default)
+        public async Task Send(string queue, Message message, string groupId, CancellationToken cancellationToken = default)
         {
             var type = message.GetType().FullName;
             var body = JsonSerializer.Serialize(message as object);

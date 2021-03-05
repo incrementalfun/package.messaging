@@ -16,13 +16,13 @@ namespace Incremental.Common.Queues.Messages
         }
 
         public async Task Send<TMessage>(string queue, TMessage message, CancellationToken cancellationToken = default)
-            where TMessage : Messages.Message
+            where TMessage : Message
         {
             await _queueSender.Send(queue, message, Groups.Default, cancellationToken);
         }
 
         public async Task Send<TMessage>(string queue, IEnumerable<TMessage> messages, CancellationToken cancellationToken = default)
-            where TMessage : Messages.Message
+            where TMessage : Message
         {
             foreach (var message in messages) await _queueSender.Send(queue, message, Groups.Default, cancellationToken);
         }

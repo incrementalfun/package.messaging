@@ -6,11 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Incremental.Common.Queue.Message.Contract;
-using Incremental.Common.Queue.Service.Contract;
+using Incremental.Common.Queues.Service.Contract;
 using Microsoft.Extensions.Logging;
 
-namespace Incremental.Common.Queue.Service
+namespace Incremental.Common.Queues.Service
 {
     public class QueueService : IQueueSender, IQueueReceiver
     {
@@ -25,7 +24,7 @@ namespace Incremental.Common.Queue.Service
 
         public async Task<int> Count(string queue, CancellationToken cancellationToken = default)
         {
-            var attributes = await _sqs.GetQueueAttributesAsync(Queues.Services, new List<string> {QueueAttributeName.ApproximateNumberOfMessages},
+            var attributes = await _sqs.GetQueueAttributesAsync(QueuesEndpoints.Services, new List<string> {QueueAttributeName.ApproximateNumberOfMessages},
                 cancellationToken);
 
             return attributes.ApproximateNumberOfMessages;
@@ -45,7 +44,7 @@ namespace Incremental.Common.Queue.Service
         {
             var response = await _sqs.ReceiveMessageAsync(new ReceiveMessageRequest
             {
-                QueueUrl = Queues.Services,
+                QueueUrl = QueuesEndpoints.Services,
                 MaxNumberOfMessages = 1,
                 MessageAttributeNames = new List<string> {nameof(Type)}
             }, cancellationToken);
@@ -75,7 +74,7 @@ namespace Incremental.Common.Queue.Service
 
         public async Task MarkAsDelivered(string queue, string receiptHandle, CancellationToken cancellationToken = default)
         {
-            await _sqs.DeleteMessageAsync(Queues.Services, receiptHandle, cancellationToken);
+            await _sqs.DeleteMessageAsync(QueuesEndpoints.Services, receiptHandle, cancellationToken);
         }
 
         private async Task Send(string queue, string body, string type, string groupId, CancellationToken cancellationToken)

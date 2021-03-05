@@ -3,15 +3,15 @@ using Amazon;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.SQS;
-using Incremental.Common.Queue.Message;
-using Incremental.Common.Queue.Message.Contract;
-using Incremental.Common.Queue.Service;
-using Incremental.Common.Queue.Service.Contract;
+using Incremental.Common.Queues.Message;
+using Incremental.Common.Queues.Message.Contract;
+using Incremental.Common.Queues.Service;
+using Incremental.Common.Queues.Service.Contract;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Incremental.Common.Queue.DependencyInjection
+namespace Incremental.Common.Queues.DependencyInjection
 {
     /// <summary>
     /// Registers queue management.

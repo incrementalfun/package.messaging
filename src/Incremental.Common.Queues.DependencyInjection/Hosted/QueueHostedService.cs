@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Queue.Service.Contract;
+using Incremental.Common.Queues.Service.Contract;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Incremental.Common.Queue.DependencyInjection.Hosted
+namespace Incremental.Common.Queues.DependencyInjection.Hosted
 {
     internal class QueueHostedService : BackgroundService
     {
@@ -33,19 +33,19 @@ namespace Incremental.Common.Queue.DependencyInjection.Hosted
             {
                 var queueReceiver = outerServiceScope.ServiceProvider.GetRequiredService<IQueueReceiver>();
 
-                var visibility = await queueReceiver.GetVisibilityTimeSpan(Queues.Services, stoppingToken);
+                var visibility = await queueReceiver.GetVisibilityTimeSpan(QueuesEndpoints.Services, stoppingToken);
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     await Task.Delay(5000, stoppingToken);
 
-                    var messagesInQueue = await queueReceiver.Count(Queues.Services, stoppingToken);
+                    var messagesInQueue = await queueReceiver.Count(QueuesEndpoints.Services, stoppingToken);
 
                     while (messagesInQueue > 0)
                     {
                         _logger.LogDebug("{MessageCount} messages in queue", messagesInQueue);
 
-                        var message = await queueReceiver.Receive(Queues.Services, 1, stoppingToken);
+                        var message = await queueReceiver.Receive(QueuesEndpoints.Services, 1, stoppingToken);
 
                         var cancellationTokenSource = new CancellationTokenSource(visibility.Subtract(TimeSpan.FromSeconds(5)));
 

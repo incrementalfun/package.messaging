@@ -1,8 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Queue.Message.Contract;
 
-namespace Incremental.Common.Queue.Service.Contract
+namespace Incremental.Common.Queues.Service.Contract
 {
     /// <summary>
     /// Queue sender service.

@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Incremental.Common.Queue.Service.Contract
+namespace Incremental.Common.Queues.Service.Contract
 {
     /// <summary>
     /// Queue receiver service.

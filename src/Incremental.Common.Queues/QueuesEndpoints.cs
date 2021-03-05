@@ -1,9 +1,9 @@
-﻿namespace Incremental.Common.Queue
+﻿namespace Incremental.Common.Queues
 {
     /// <summary>
     /// Queue endpoints.
     /// </summary>
-    public static class Queues
+    public static class QueuesEndpoints
     {
         /// <summary>
         /// Service Queue.

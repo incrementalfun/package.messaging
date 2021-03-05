@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Incremental.Common.Queue
+namespace Incremental.Common.Queues
 {
     /// <summary>
     /// Group reference.

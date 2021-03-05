@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incremental.Common.Queue", "Incremental.Common.Queue\Incremental.Common.Queue.csproj", "{234C54C2-7D4A-48C2-8BB9-8E64AD4EF152}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incremental.Common.Queues", "Incremental.Common.Queues\Incremental.Common.Queues.csproj", "{234C54C2-7D4A-48C2-8BB9-8E64AD4EF152}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incremental.Common.Queue.DependencyInjection", "Incremental.Common.Queue.DependencyInjection\Incremental.Common.Queue.DependencyInjection.csproj", "{2C38AE96-C0C7-499D-8001-269113FD172B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incremental.Common.Queues.DependencyInjection", "Incremental.Common.Queues.DependencyInjection\Incremental.Common.Queues.DependencyInjection.csproj", "{2C38AE96-C0C7-499D-8001-269113FD172B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

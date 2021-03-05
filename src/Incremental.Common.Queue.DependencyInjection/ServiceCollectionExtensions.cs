@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
+using Amazon;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.SQS;
 using Incremental.Common.Queue.Channel;
 using Incremental.Common.Queue.Channel.Contract;
+using Incremental.Common.Queue.Message;
 using Incremental.Common.Queue.Message.Contract;
 using Incremental.Common.Queue.Service.Contract;
 using MediatR;

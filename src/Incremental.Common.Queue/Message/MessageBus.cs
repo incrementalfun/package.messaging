@@ -6,7 +6,7 @@ using Incremental.Common.Queue.Service.Contract;
 
 namespace Incremental.Common.Queue.Message
 {
-    internal class MessageBus : IMessageBus
+    public class MessageBus : IMessageBus
     {
         private readonly IQueueSender _queueSender;
 

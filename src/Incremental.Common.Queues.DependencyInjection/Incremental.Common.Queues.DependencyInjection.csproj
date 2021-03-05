@@ -2,6 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Title>Incremental.Common.Queues.DependencyInjection</Title>
+        <Description>Dependency injection for common queues resources</Description>
+        <Authors>Lucas Maximiliano Marino</Authors>
+        <PackageProjectUrl>https://github.com/incrementalfun/package.queues</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/incrementalfun/package.queues</RepositoryUrl>
+        <Copyright>Copyright © Lucas Maximiliano Marino 2021</Copyright>
     </PropertyGroup>
 
     <ItemGroup>

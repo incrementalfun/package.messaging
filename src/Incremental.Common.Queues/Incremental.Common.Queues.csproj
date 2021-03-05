@@ -3,10 +3,11 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Title>Common Queue Resources</Title>
+        <Title>Incremental.Common.Queues</Title>
+        <Description>Common queues resources</Description>
         <Authors>Lucas Maximiliano Marino</Authors>
-        <PackageProjectUrl>https://github.com/incrementalfun/package.queue</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/incrementalfun/package.queue</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/incrementalfun/package.queues</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/incrementalfun/package.queues</RepositoryUrl>
         <Copyright>Copyright © Lucas Maximiliano Marino 2021</Copyright>
     </PropertyGroup>
 

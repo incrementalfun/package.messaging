@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Incremental.Common.Queues.Messages;
 using Incremental.Common.Queues.Service.Contract;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +19,7 @@ namespace Incremental.Common.Queues.DependencyInjection.Hosted
         private readonly Dictionary<string, Type> _messageTypes;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IEnumerable<Messages.Message> messageTypes)
+        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IEnumerable<Message> messageTypes)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
@@ -76,7 +77,7 @@ namespace Incremental.Common.Queues.DependencyInjection.Hosted
 
                 var sender = innerServiceScope.ServiceProvider.GetRequiredService<ISender>();
 
-                if (JsonSerializer.Deserialize(message.body, type) is Messages.Message request)
+                if (JsonSerializer.Deserialize(message.body, type) is Message request)
                 {
                     request = request with {Receipt = message.receipt};
 

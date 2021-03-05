@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Queue.Message.Contract;
 using Incremental.Common.Queue.Service.Contract;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,21 +12,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Incremental.Common.Queue.Hosted
 {
-    /// <summary>
-    /// Queue service that retrieves events from the queue and launches them as external events.
-    /// </summary>
-    public class QueueHostedService : BackgroundService
+    internal class QueueHostedService : BackgroundService
     {
         private readonly ILogger<QueueHostedService> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly Dictionary<string, Type> _messageTypes;
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="scopeFactory"></param>
-        /// <param name="messageTypes"></param>
         public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IEnumerable<Message.Contract.Message> messageTypes)
         {
             _logger = logger;
@@ -35,7 +25,6 @@ namespace Incremental.Common.Queue.Hosted
             _messageTypes = messageTypes.ToDictionary(e => e.GetType().FullName, e => e.GetType());
         }
 
-        /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using var outerServiceScope = _scopeFactory.CreateScope();
@@ -54,7 +43,7 @@ namespace Incremental.Common.Queue.Hosted
 
                     while (messagesInQueue > 0)
                     {
-                        _logger.LogDebug("Found {Count} messages in queue", messagesInQueue);
+                        _logger.LogDebug("{MessageCount} messages in queue", messagesInQueue);
 
                         var message = await queueReceiver.Receive(Queues.Services, 1, stoppingToken);
 

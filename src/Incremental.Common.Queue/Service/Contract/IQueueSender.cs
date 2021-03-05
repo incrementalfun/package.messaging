@@ -7,7 +7,7 @@ namespace Incremental.Common.Queue.Service.Contract
     /// <summary>
     /// Queue sender service.
     /// </summary>
-    internal interface IQueueSender
+    public interface IQueueSender
     {
         /// <summary>
         /// Sends an event to the queues.

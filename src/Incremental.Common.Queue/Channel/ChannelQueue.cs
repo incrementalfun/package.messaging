@@ -3,7 +3,7 @@ using Incremental.Common.Queue.Channel.Contract;
 
 namespace Incremental.Common.Queue.Channel
 {
-    internal class ChannelQueue<T> : IQueueReader<T>, IQueueWriter<T>
+    public class ChannelQueue<T> : IQueueReader<T>, IQueueWriter<T>
     {
         private readonly Channel<T> _queue;
 

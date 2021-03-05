@@ -1,20 +1,16 @@
-﻿using System.Linq;
-using System.Reflection;
-using Amazon;
+﻿using System.Reflection;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.SQS;
 using Incremental.Common.Queue.Channel;
 using Incremental.Common.Queue.Channel.Contract;
-using Incremental.Common.Queue.Message;
 using Incremental.Common.Queue.Message.Contract;
-using Incremental.Common.Queue.Service;
 using Incremental.Common.Queue.Service.Contract;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Incremental.Common.Queue
+namespace Incremental.Common.Queue.DependencyInjection
 {
     /// <summary>
     /// Registers queue management.

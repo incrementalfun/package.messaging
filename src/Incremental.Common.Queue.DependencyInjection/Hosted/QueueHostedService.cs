@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Incremental.Common.Queue.Hosted
+namespace Incremental.Common.Queue.DependencyInjection.Hosted
 {
     internal class QueueHostedService : BackgroundService
     {

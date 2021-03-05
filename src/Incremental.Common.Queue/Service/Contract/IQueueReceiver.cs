@@ -7,7 +7,7 @@ namespace Incremental.Common.Queue.Service.Contract
     /// <summary>
     /// Queue receiver service.
     /// </summary>
-    internal interface IQueueReceiver
+    public interface IQueueReceiver
     {
         /// <summary>
         /// Count of how many messages are in the queue right now.

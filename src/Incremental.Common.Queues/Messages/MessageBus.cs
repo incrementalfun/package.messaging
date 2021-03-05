@@ -15,17 +15,16 @@ namespace Incremental.Common.Queues.Message
             _queueSender = queueSender;
         }
 
-        public async Task Send<TMessage>(string queue, TMessage message, CancellationToken cancellationToken = default) where TMessage : Contract.Message
+        public async Task Send<TMessage>(string queue, TMessage message, CancellationToken cancellationToken = default)
+            where TMessage : Messages.Message
         {
             await _queueSender.Send(queue, message, Groups.Default, cancellationToken);
         }
-        
-        public async Task Send<TMessage>(string queue, IEnumerable<TMessage> messages, CancellationToken cancellationToken = default) where TMessage : Contract.Message
+
+        public async Task Send<TMessage>(string queue, IEnumerable<TMessage> messages, CancellationToken cancellationToken = default)
+            where TMessage : Messages.Message
         {
-            foreach (var message in messages)
-            {
-                await _queueSender.Send(queue, message, Groups.Default, cancellationToken);
-            }
+            foreach (var message in messages) await _queueSender.Send(queue, message, Groups.Default, cancellationToken);
         }
 
         public async Task Success((string queue, string id) receipt, CancellationToken cancellationToken = default)

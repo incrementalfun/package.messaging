@@ -14,12 +14,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Incremental.Common.Queues.DependencyInjection
 {
     /// <summary>
-    /// Registers queue management.
+    ///     Registers queue management.
     /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Configures all the related services necessary for queues to work. Credentials are sourced from configuration automatically.
+        ///     Configures all the related services necessary for queues to work. Credentials are sourced from configuration automatically.
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
@@ -34,12 +34,12 @@ namespace Incremental.Common.Queues.DependencyInjection
             });
 
             services.RegisterQueues(assemblies);
-            
+
             return services;
         }
 
         /// <summary>
-        /// Configures all the related services necessary for queues to work. Requires credentials to be passed.
+        ///     Configures all the related services necessary for queues to work. Requires credentials to be passed.
         /// </summary>
         /// <param name="services"></param>
         /// <param name="accessKey"></param>
@@ -55,23 +55,22 @@ namespace Incremental.Common.Queues.DependencyInjection
             });
 
             services.RegisterQueues(assemblies);
-            
+
             return services;
         }
 
         private static IServiceCollection RegisterQueues(this IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddMediatR(assemblies);
-            
+
             services.AddScoped<IMessageBus, MessageBus>();
-            
+
             services.AddAWSService<IAmazonSQS>();
-            
+
             services.AddScoped<IQueueSender, QueueService>();
             services.AddScoped<IQueueReceiver, QueueService>();
 
             return services;
         }
-
     }
 }

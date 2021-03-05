@@ -15,10 +15,10 @@ namespace Incremental.Common.Queues.DependencyInjection.Hosted
     internal class QueueHostedService : BackgroundService
     {
         private readonly ILogger<QueueHostedService> _logger;
-        private readonly IServiceScopeFactory _scopeFactory;
         private readonly Dictionary<string, Type> _messageTypes;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IEnumerable<Message.Contract.Message> messageTypes)
+        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IEnumerable<Messages.Message> messageTypes)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
@@ -76,7 +76,7 @@ namespace Incremental.Common.Queues.DependencyInjection.Hosted
 
                 var sender = innerServiceScope.ServiceProvider.GetRequiredService<ISender>();
 
-                if (JsonSerializer.Deserialize(message.body, type) is Message.Contract.Message request)
+                if (JsonSerializer.Deserialize(message.body, type) is Messages.Message request)
                 {
                     request = request with {Receipt = message.receipt};
 

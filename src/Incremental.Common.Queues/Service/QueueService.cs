@@ -24,12 +24,13 @@ namespace Incremental.Common.Queues.Service
 
         public async Task<int> Count(string queue, CancellationToken cancellationToken = default)
         {
-            var attributes = await _sqs.GetQueueAttributesAsync(QueuesEndpoints.Services, new List<string> {QueueAttributeName.ApproximateNumberOfMessages},
+            var attributes = await _sqs.GetQueueAttributesAsync(QueuesEndpoints.Services,
+                new List<string> {QueueAttributeName.ApproximateNumberOfMessages},
                 cancellationToken);
 
             return attributes.ApproximateNumberOfMessages;
         }
-        
+
         public async Task<TimeSpan> GetVisibilityTimeSpan(string queue, CancellationToken cancellationToken = default)
         {
             var desiredAttributes = new List<string> {QueueAttributeName.VisibilityTimeout};
@@ -49,22 +50,17 @@ namespace Incremental.Common.Queues.Service
                 MessageAttributeNames = new List<string> {nameof(Type)}
             }, cancellationToken);
 
-            if (!response.Messages.Any())
-            {
-                return default;
-            }
+            if (!response.Messages.Any()) return default;
 
             var message = response.Messages.First();
 
             if (message.MessageAttributes.TryGetValue(nameof(Type), out var typeAttribute) && !string.IsNullOrWhiteSpace(typeAttribute.StringValue))
-            {
                 return (message.Body, typeAttribute.StringValue, (queue, message.ReceiptHandle));
-            }
 
             return default;
         }
 
-        public async Task Send(string queue, Message.Contract.Message message, string groupId, CancellationToken cancellationToken = default)
+        public async Task Send(string queue, Messages.Message message, string groupId, CancellationToken cancellationToken = default)
         {
             var type = message.GetType().FullName;
             var body = JsonSerializer.Serialize(message as object);
@@ -95,10 +91,7 @@ namespace Incremental.Common.Queues.Service
                 }
             }, cancellationToken);
 
-            if (string.IsNullOrWhiteSpace(response.MessageId))
-            {
-                _logger.LogError("Message has not been delivered to the queue ({@message})", body);
-            }
+            if (string.IsNullOrWhiteSpace(response.MessageId)) _logger.LogError("Message has not been delivered to the queue ({@message})", body);
         }
     }
 }

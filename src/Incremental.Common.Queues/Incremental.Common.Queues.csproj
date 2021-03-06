@@ -4,7 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Title>Incremental.Common.Queues</Title>
-        <Description>Common queues resources</Description>
+        <Description>Common resources for working with queues.</Description>
         <Authors>Lucas Maximiliano Marino</Authors>
         <PackageProjectUrl>https://github.com/incrementalfun/package.queues</PackageProjectUrl>
         <RepositoryUrl>https://github.com/incrementalfun/package.queues</RepositoryUrl>

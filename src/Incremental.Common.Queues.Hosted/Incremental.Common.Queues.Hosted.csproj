@@ -3,8 +3,8 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Title>Incremental.Common.Queues.DependencyInjection</Title>
-        <Description>Dependency injection for common queues resources</Description>
+        <Title>Incremental.Common.Queues.Hosted</Title>
+        <Description>Hosted service for handling queues.</Description>
         <Authors>Lucas Maximiliano Marino</Authors>
         <PackageProjectUrl>https://github.com/incrementalfun/package.queues</PackageProjectUrl>
         <RepositoryUrl>https://github.com/incrementalfun/package.queues</RepositoryUrl>

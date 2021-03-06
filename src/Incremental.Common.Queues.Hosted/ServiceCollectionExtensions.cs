@@ -11,7 +11,7 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Incremental.Common.Queues.DependencyInjection
+namespace Incremental.Common.Queues.Hosted
 {
     /// <summary>
     ///     Registers queue management.

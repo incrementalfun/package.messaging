@@ -26,9 +26,9 @@ namespace Incremental.Common.Queues.Hosted
 
             if (string.IsNullOrWhiteSpace(options.QueueEndpoint)) throw new ArgumentException("QueueEndpoint is a required argument.");
 
-            if (options.RegisteredMessageTypes.Any() && options.RegisteredMessageTypes.Values.All(t => t.IsAssignableTo(typeof(Message))))
+            if (options.SupportedMessageTypes.Any() && options.SupportedMessageTypes.Values.All(t => t.IsAssignableTo(typeof(Message))))
             {
-                foreach (var registeredMessageType in options.RegisteredMessageTypes.Values)
+                foreach (var registeredMessageType in options.SupportedMessageTypes.Values)
                     services.AddScoped(typeof(Message), registeredMessageType);
 
                 services.AddHostedService<QueueHostedService>();

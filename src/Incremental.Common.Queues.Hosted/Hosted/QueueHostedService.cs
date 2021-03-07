@@ -4,26 +4,28 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Incremental.Common.Queues.Hosted.Options;
 using Incremental.Common.Queues.Messages;
 using Incremental.Common.Queues.Service.Contract;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Incremental.Common.Queues.Hosted.Hosted
 {
     internal class QueueHostedService : BackgroundService
     {
         private readonly ILogger<QueueHostedService> _logger;
-        private readonly Dictionary<string, Type> _messageTypes;
+        private readonly CommonQueuesOptions _options;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IEnumerable<Message> messageTypes)
+        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IOptions<CommonQueuesOptions> options)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
-            _messageTypes = messageTypes.ToDictionary(e => e.GetType().FullName, e => e.GetType());
+            _options = options.Value;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,19 +36,19 @@ namespace Incremental.Common.Queues.Hosted.Hosted
             {
                 var queueReceiver = outerServiceScope.ServiceProvider.GetRequiredService<IQueueReceiver>();
 
-                var visibility = await queueReceiver.GetVisibilityTimeSpan(QueuesEndpoints.Services, stoppingToken);
+                var visibility = await queueReceiver.GetVisibilityTimeSpan(_options.QueueEndpoint, stoppingToken);
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     await Task.Delay(5000, stoppingToken);
 
-                    var messagesInQueue = await queueReceiver.Count(QueuesEndpoints.Services, stoppingToken);
+                    var messagesInQueue = await queueReceiver.Count(_options.QueueEndpoint, stoppingToken);
 
                     while (messagesInQueue > 0)
                     {
                         _logger.LogDebug("{MessageCount} messages in queue", messagesInQueue);
 
-                        var message = await queueReceiver.Receive(QueuesEndpoints.Services, 1, stoppingToken);
+                        var message = await queueReceiver.Receive(_options.QueueEndpoint, 1, stoppingToken);
 
                         var cancellationTokenSource = new CancellationTokenSource(visibility.Subtract(TimeSpan.FromSeconds(5)));
 
@@ -95,7 +97,7 @@ namespace Incremental.Common.Queues.Hosted.Hosted
 
         private bool MessageTypeIsRegistered((string body, string type, (string queue, string id) receipt) message, out Type type)
         {
-            return _messageTypes.TryGetValue(message.type ?? string.Empty, out type);
+            return _options.SupportedMessageTypes.TryGetValue(message.type ?? string.Empty, out type);
         }
     }
 }

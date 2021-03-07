@@ -8,11 +8,11 @@
         /// <summary>
         ///     Service Queue.
         /// </summary>
-        public static readonly string Services = "https://sqs.eu-west-1.amazonaws.com/***REMOVED***/incremental_services.fifo";
+        public static readonly string Services = "";
 
         /// <summary>
         ///     Statistics Queue.
         /// </summary>
-        public static readonly string Statistics = "https://sqs.eu-west-1.amazonaws.com/***REMOVED***/incremental_statistics.fifo";
+        public static readonly string Statistics = "";
     }
 }

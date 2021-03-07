@@ -25,7 +25,7 @@ namespace Incremental.Common.Queues.Hosted.Client
 
         public async Task<int> Count(string queue, CancellationToken cancellationToken = default)
         {
-            var attributes = await _sqs.GetQueueAttributesAsync(QueuesEndpoints.Services,
+            var attributes = await _sqs.GetQueueAttributesAsync(queue,
                 new List<string> {QueueAttributeName.ApproximateNumberOfMessages},
                 cancellationToken);
 
@@ -46,7 +46,7 @@ namespace Incremental.Common.Queues.Hosted.Client
         {
             var response = await _sqs.ReceiveMessageAsync(new ReceiveMessageRequest
             {
-                QueueUrl = QueuesEndpoints.Services,
+                QueueUrl = queue,
                 MaxNumberOfMessages = 1,
                 MessageAttributeNames = new List<string> {nameof(Type)}
             }, cancellationToken);
@@ -71,7 +71,7 @@ namespace Incremental.Common.Queues.Hosted.Client
 
         public async Task MarkAsDelivered(string queue, string receiptHandle, CancellationToken cancellationToken = default)
         {
-            await _sqs.DeleteMessageAsync(QueuesEndpoints.Services, receiptHandle, cancellationToken);
+            await _sqs.DeleteMessageAsync(queue, receiptHandle, cancellationToken);
         }
 
         private async Task Send(string queue, string body, string type, string groupId, CancellationToken cancellationToken)

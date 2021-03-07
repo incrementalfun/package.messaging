@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Queues.Messages.Contract;
-using Incremental.Common.Queues.Service.Contract;
+using Incremental.Common.Queues.Client;
+using Incremental.Common.Queues.Messages;
 
-namespace Incremental.Common.Queues.Messages
+namespace Incremental.Common.Queues.Hosted.Messages
 {
     public class MessageBus : IMessageBus
     {

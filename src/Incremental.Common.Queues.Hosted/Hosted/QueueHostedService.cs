@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Incremental.Common.Queues.Client;
 using Incremental.Common.Queues.Hosted.Options;
 using Incremental.Common.Queues.Messages;
-using Incremental.Common.Queues.Service.Contract;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

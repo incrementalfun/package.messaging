@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Incremental.Common.Queues.Service.Contract;
+using Incremental.Common.Queues.Client;
 using Microsoft.Extensions.Logging;
 using Message = Incremental.Common.Queues.Messages.Message;
 

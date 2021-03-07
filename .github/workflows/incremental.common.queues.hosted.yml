@@ -1,4 +1,4 @@
-name: Build & Publish - Incremental.Common.Queues.DependencyInjection
+name: Build & Publish - Incremental.Common.Queues.Hosted
 on:
   push:
   pull_request:
@@ -11,7 +11,7 @@ env:
   # Disable sending usage data to Microsoft
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   # Project name to pack and publish
-  PROJECT_NAME: Incremental.Common.Queues.DependencyInjection
+  PROJECT_NAME: Incremental.Common.Queues.Hosted
   # GitHub Packages Feed settings
   GITHUB_FEED: https://nuget.pkg.github.com/incrementalfun/
   GITHUB_USER: incrementalbot

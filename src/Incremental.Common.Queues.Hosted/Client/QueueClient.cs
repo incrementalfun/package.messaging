@@ -10,14 +10,14 @@ using Incremental.Common.Queues.Service.Contract;
 using Microsoft.Extensions.Logging;
 using Message = Incremental.Common.Queues.Messages.Message;
 
-namespace Incremental.Common.Queues.Hosted.Services
+namespace Incremental.Common.Queues.Hosted.Client
 {
-    internal class QueueService : IQueueSender, IQueueReceiver
+    internal class QueueClient : IQueueSender, IQueueReceiver
     {
-        private readonly ILogger<QueueService> _logger;
+        private readonly ILogger<QueueClient> _logger;
         private readonly IAmazonSQS _sqs;
 
-        public QueueService(ILogger<QueueService> logger, IAmazonSQS sqs)
+        public QueueClient(ILogger<QueueClient> logger, IAmazonSQS sqs)
         {
             _logger = logger;
             _sqs = sqs;

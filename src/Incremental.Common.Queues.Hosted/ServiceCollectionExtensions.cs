@@ -2,7 +2,10 @@
 using System.Linq;
 using Incremental.Common.Queues.Hosted.Hosted;
 using Incremental.Common.Queues.Hosted.Options;
+using Incremental.Common.Queues.Hosted.Services;
 using Incremental.Common.Queues.Messages;
+using Incremental.Common.Queues.Service;
+using Incremental.Common.Queues.Service.Contract;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Incremental.Common.Queues.Hosted
@@ -30,7 +33,10 @@ namespace Incremental.Common.Queues.Hosted
             {
                 foreach (var registeredMessageType in options.SupportedMessageTypes.Values)
                     services.AddScoped(typeof(Message), registeredMessageType);
-
+                
+                services.AddScoped<IQueueSender, QueueService>();
+                services.AddScoped<IQueueReceiver, QueueService>();
+                
                 services.AddHostedService<QueueHostedService>();
             }
 

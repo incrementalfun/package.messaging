@@ -67,9 +67,6 @@ namespace Incremental.Common.Queues
 
             services.AddAWSService<IAmazonSQS>();
 
-            services.AddScoped<IQueueSender, QueueService>();
-            services.AddScoped<IQueueReceiver, QueueService>();
-
             return services;
         }
     }

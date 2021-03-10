@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using Incremental.Common.Queues.Messages;
+using Incremental.Common.Messaging.Messages;
 
-namespace Incremental.Common.Queues.Hosted.Options
+namespace Incremental.Common.Messaging.Hosted.Options
 {
     /// <summary>
     ///     Common options for hosted queue service.
     /// </summary>
-    public class CommonQueuesOptions
+    public class MessagingOptions
     {
-        internal CommonQueuesOptions()
+        internal MessagingOptions()
         {
             SupportedMessageTypes = new Dictionary<string, Type>();
         }
@@ -31,7 +31,7 @@ namespace Incremental.Common.Queues.Hosted.Options
         /// Adds a message type to the collection of supported types.
         /// </summary>
         /// <typeparam name="TMessage"></typeparam>
-        public void ConfigureSupportFor<TMessage>() where TMessage : Message
+        public void ConfigureSupportForMessagesInAssemblyO<TMessage>() where TMessage : Message
         {
             SupportedMessageTypes.TryAdd(typeof(TMessage).FullName, typeof(TMessage));
         }

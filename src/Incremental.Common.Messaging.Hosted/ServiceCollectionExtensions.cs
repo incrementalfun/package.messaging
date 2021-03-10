@@ -24,13 +24,13 @@ namespace Incremental.Common.Messaging.Hosted
         /// <param name="assemblies">All assemblies with handlers.</param>
         /// <returns><see cref="IServiceCollection"/></returns>
         /// <exception cref="ArgumentException">When the queue endpoint is null or empty.</exception>
-        public static IServiceCollection AddQueuesHostedServices(this IServiceCollection services, Action<MessagingOptions> hostedOptions, params Assembly[] assemblies)
+        public static IServiceCollection AddMessagingHostedServices(this IServiceCollection services, Action<MessagingOptions> hostedOptions, params Assembly[] assemblies)
         {
             var options = new MessagingOptions();
 
             hostedOptions.Invoke(options);
 
-            if (string.IsNullOrWhiteSpace(options.QueueEndpoint)) throw new ArgumentException("QueueEndpoint is a required argument.");
+            if (string.IsNullOrWhiteSpace(options.QueueEndpoint)) throw new ArgumentException("Queue endpoint is a required argument.");
 
             if (options.SupportedMessageTypes.Any() && options.SupportedMessageTypes.Values.All(t => t.IsAssignableTo(typeof(Message))))
             {

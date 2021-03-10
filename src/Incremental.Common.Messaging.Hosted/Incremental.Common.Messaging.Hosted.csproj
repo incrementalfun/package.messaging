@@ -20,6 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Incremental.Common.Queues\Incremental.Common.Queues.csproj" />
+      <ProjectReference Include="..\Incremental.Common.Messaging\Incremental.Common.Messaging.csproj" />
     </ItemGroup>
 </Project>

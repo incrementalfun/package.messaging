@@ -2,24 +2,24 @@
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Queues.Client;
-using Incremental.Common.Queues.Hosted.Options;
-using Incremental.Common.Queues.Messages;
+using Incremental.Common.Messaging.Client;
+using Incremental.Common.Messaging.Hosted.Options;
+using Incremental.Common.Messaging.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Incremental.Common.Queues.Hosted.Hosted
+namespace Incremental.Common.Messaging.Hosted.Hosted
 {
     internal class QueueHostedService : BackgroundService
     {
         private readonly ILogger<QueueHostedService> _logger;
-        private readonly CommonQueuesOptions _options;
+        private readonly MessagingOptions _options;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IOptions<CommonQueuesOptions> options)
+        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IOptions<MessagingOptions> options)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
@@ -32,7 +32,7 @@ namespace Incremental.Common.Queues.Hosted.Hosted
 
             try
             {
-                var queueReceiver = outerServiceScope.ServiceProvider.GetRequiredService<IQueueReceiver>();
+                var queueReceiver = outerServiceScope.ServiceProvider.GetRequiredService<IMessageReceiver>();
 
                 var visibility = await queueReceiver.GetVisibilityTimeSpan(_options.QueueEndpoint, stoppingToken);
 

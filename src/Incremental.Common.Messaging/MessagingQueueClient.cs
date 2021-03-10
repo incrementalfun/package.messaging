@@ -6,18 +6,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Incremental.Common.Queues.Client;
+using Incremental.Common.Messaging.Client;
 using Microsoft.Extensions.Logging;
-using Message = Incremental.Common.Queues.Messages.Message;
+using Message = Incremental.Common.Messaging.Messages.Message;
 
-namespace Incremental.Common.Queues.Hosted.Client
+namespace Incremental.Common.Messaging
 {
-    internal class QueueClient : IQueueSender, IQueueReceiver
+    internal class MessagingQueueClient : IMessageSender, IMessageReceiver
     {
-        private readonly ILogger<QueueClient> _logger;
+        private readonly ILogger<MessagingQueueClient> _logger;
         private readonly IAmazonSQS _sqs;
 
-        public QueueClient(ILogger<QueueClient> logger, IAmazonSQS sqs)
+        public MessagingQueueClient(ILogger<MessagingQueueClient> logger, IAmazonSQS sqs)
         {
             _logger = logger;
             _sqs = sqs;

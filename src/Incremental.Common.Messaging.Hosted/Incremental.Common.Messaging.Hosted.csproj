@@ -3,11 +3,11 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Title>Incremental.Common.Queues.Hosted</Title>
-        <Description>Hosted service for handling queues.</Description>
+        <Title>Incremental.Common.Messaging.Hosted</Title>
+        <Description>Hosted service for handling messages.</Description>
         <Authors>Lucas Maximiliano Marino</Authors>
-        <PackageProjectUrl>https://github.com/incrementalfun/package.queues</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/incrementalfun/package.queues</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/incrementalfun/package.messaging</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/incrementalfun/package.messaging</RepositoryUrl>
         <Copyright>Copyright © Lucas Maximiliano Marino 2021</Copyright>
     </PropertyGroup>
 

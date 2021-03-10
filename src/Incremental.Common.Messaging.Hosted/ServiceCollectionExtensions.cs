@@ -19,10 +19,12 @@ namespace Incremental.Common.Messaging.Hosted
         /// <summary>
         ///     Registers a hosted service to handle incoming messages of a specific queue.
         /// </summary>
-        /// <returns>
-        ///     <see cref="IServiceCollection" />
-        /// </returns>
-        public static IServiceCollection AddQueuesHostedServices(this IServiceCollection services, Action<MessagingOptions> hostedOptions)
+        /// <param name="services">The <see cref="IServiceCollection"/> to attach to.</param>
+        /// <param name="hostedOptions">Hosted options.</param>
+        /// <param name="assemblies">All assemblies with handlers.</param>
+        /// <returns><see cref="IServiceCollection"/></returns>
+        /// <exception cref="ArgumentException">When the queue endpoint is null or empty.</exception>
+        public static IServiceCollection AddQueuesHostedServices(this IServiceCollection services, Action<MessagingOptions> hostedOptions, params Assembly[] assemblies)
         {
             var options = new MessagingOptions();
 
@@ -34,6 +36,8 @@ namespace Incremental.Common.Messaging.Hosted
             {
                 foreach (var registeredMessageType in options.SupportedMessageTypes.Values)
                     services.AddScoped(typeof(Message), registeredMessageType);
+
+                services.AddMediatR(assemblies);
                 
                 services.AddHostedService<QueueHostedService>();
             }

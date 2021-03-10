@@ -31,7 +31,7 @@ namespace Incremental.Common.Messaging.Hosted.Options
         /// Adds a message type to the collection of supported types.
         /// </summary>
         /// <typeparam name="TMessage"></typeparam>
-        public void ConfigureSupportForMessagesInAssemblyO<TMessage>() where TMessage : Message
+        public void ConfigureSupportFor<TMessage>() where TMessage : Message
         {
             SupportedMessageTypes.TryAdd(typeof(TMessage).FullName, typeof(TMessage));
         }

@@ -19,11 +19,10 @@ namespace Incremental.Common.Messaging
         /// <summary>
         ///     Configures all the related services necessary for queues to work. Credentials are sourced from configuration automatically.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <param name="assemblies"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddMessaging(this IServiceCollection services, IConfiguration configuration, params Assembly[] assemblies)
+        /// <param name="services">The <see cref="IServiceCollection"/> to attach to.</param>
+        /// <param name="configuration">The <see cref="IConfiguration"/> to source configuration from.</param>
+        /// <returns><see cref="IServiceCollection"/></returns>
+        public static IServiceCollection AddMessaging(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDefaultAWSOptions(new AWSOptions
             {
@@ -31,12 +30,12 @@ namespace Incremental.Common.Messaging
                 Credentials = new BasicAWSCredentials(configuration["AWS_ACCESS_KEY"], configuration["AWS_SECRET_KEY"])
             });
 
-            services.RegisterQueues(assemblies);
+            services.RegisterQueues();
 
             return services;
         }
 
-        private static IServiceCollection RegisterQueues(this IServiceCollection services, params Assembly[] assemblies)
+        private static IServiceCollection RegisterQueues(this IServiceCollection services)
         {
             services.AddAWSService<IAmazonSQS>();
             

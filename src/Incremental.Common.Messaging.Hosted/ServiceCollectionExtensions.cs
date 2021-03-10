@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Linq;
-using Incremental.Common.Queues.Client;
-using Incremental.Common.Queues.Hosted.Client;
-using Incremental.Common.Queues.Hosted.Hosted;
-using Incremental.Common.Queues.Hosted.Messages;
-using Incremental.Common.Queues.Hosted.Options;
-using Incremental.Common.Queues.Messages;
+using System.Reflection;
+using Incremental.Common.Messaging.Client;
+using Incremental.Common.Messaging.Handling;
+using Incremental.Common.Messaging.Hosted.Hosted;
+using Incremental.Common.Messaging.Hosted.Options;
+using Incremental.Common.Messaging.Messages;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Incremental.Common.Queues.Hosted
+namespace Incremental.Common.Messaging.Hosted
 {
     /// <summary>
     ///     Registers queue management.
@@ -21,9 +22,9 @@ namespace Incremental.Common.Queues.Hosted
         /// <returns>
         ///     <see cref="IServiceCollection" />
         /// </returns>
-        public static IServiceCollection AddQueuesHostedServices(this IServiceCollection services, Action<CommonQueuesOptions> hostedOptions)
+        public static IServiceCollection AddQueuesHostedServices(this IServiceCollection services, Action<MessagingOptions> hostedOptions)
         {
-            var options = new CommonQueuesOptions();
+            var options = new MessagingOptions();
 
             hostedOptions.Invoke(options);
 
@@ -33,11 +34,6 @@ namespace Incremental.Common.Queues.Hosted
             {
                 foreach (var registeredMessageType in options.SupportedMessageTypes.Values)
                     services.AddScoped(typeof(Message), registeredMessageType);
-                
-                services.AddScoped<IMessageBus, MessageBus>();
-                
-                services.AddScoped<IQueueSender, QueueClient>();
-                services.AddScoped<IQueueReceiver, QueueClient>();
                 
                 services.AddHostedService<QueueHostedService>();
             }

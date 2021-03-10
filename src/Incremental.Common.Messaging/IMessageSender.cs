@@ -1,13 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Queues.Messages;
+using Incremental.Common.Messaging.Messages;
 
-namespace Incremental.Common.Queues.Client
+namespace Incremental.Common.Messaging.Client
 {
     /// <summary>
     ///     Queue sender service.
     /// </summary>
-    public interface IQueueSender
+    public interface IMessageSender
     {
         /// <summary>
         ///     Sends an event to the queues.

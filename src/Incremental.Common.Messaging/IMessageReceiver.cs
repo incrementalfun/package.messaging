@@ -2,12 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Incremental.Common.Queues.Client
+namespace Incremental.Common.Messaging.Client
 {
     /// <summary>
     ///     Queue receiver service.
     /// </summary>
-    public interface IQueueReceiver
+    public interface IMessageReceiver
     {
         /// <summary>
         ///     Count of how many messages are in the queue right now.

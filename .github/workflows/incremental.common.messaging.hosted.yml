@@ -30,6 +30,7 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.103
+          source-url: ${{ env.GITHUB_FEED }}/index.json
       - name: Restore
         working-directory: ./src
         run: dotnet restore

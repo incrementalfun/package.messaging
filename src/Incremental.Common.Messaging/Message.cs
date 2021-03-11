@@ -2,7 +2,7 @@
 using System.Linq;
 using MediatR;
 
-namespace Incremental.Common.Messaging.Messages
+namespace Incremental.Common.Messaging
 {
     /// <summary>
     ///     Message.

@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Messaging.Messages;
 using MediatR;
 
 namespace Incremental.Common.Messaging.Handling

@@ -2,9 +2,7 @@
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Messaging.Client;
 using Incremental.Common.Messaging.Hosted.Options;
-using Incremental.Common.Messaging.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

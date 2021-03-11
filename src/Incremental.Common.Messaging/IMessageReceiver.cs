@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Incremental.Common.Messaging.Client
+namespace Incremental.Common.Messaging
 {
     /// <summary>
     ///     Queue receiver service.

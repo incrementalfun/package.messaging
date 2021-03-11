@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Incremental.Common.Messaging.Client;
 using Incremental.Common.Messaging.Handling;
 using Incremental.Common.Messaging.Hosted.Hosted;
 using Incremental.Common.Messaging.Hosted.Options;
-using Incremental.Common.Messaging.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

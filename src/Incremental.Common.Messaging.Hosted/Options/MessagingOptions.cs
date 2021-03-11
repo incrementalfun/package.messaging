@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Incremental.Common.Messaging.Messages;
 
 namespace Incremental.Common.Messaging.Hosted.Options
 {
@@ -18,6 +17,11 @@ namespace Incremental.Common.Messaging.Hosted.Options
         ///     Queue endpoint.
         /// </summary>
         public string QueueEndpoint { get; set; }
+        
+        /// <summary>
+        ///     Event bus.
+        /// </summary>
+        public string EventBus { get; set; }
 
         /// <summary>
         ///     Types of messages that this queue will handle.

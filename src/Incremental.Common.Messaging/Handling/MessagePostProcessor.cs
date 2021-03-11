@@ -1,7 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Messaging.Client;
-using Incremental.Common.Messaging.Messages;
 using MediatR;
 using MediatR.Pipeline;
 
@@ -41,7 +39,7 @@ namespace Incremental.Common.Messaging.Handling
             {
                 foreach (var step in message.FollowingSteps())
                 {
-                    await _messageSender.Send(message.Receipt.Queue, message, "default", cancellationToken);
+                    await _messageSender.Send(message.Receipt.Queue, message, Groups.Default, cancellationToken);
                 }
             }
         }

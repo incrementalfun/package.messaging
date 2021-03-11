@@ -6,9 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Incremental.Common.Messaging.Client;
 using Microsoft.Extensions.Logging;
-using Message = Incremental.Common.Messaging.Messages.Message;
+using Message = Incremental.Common.Messaging.Message;
 
 namespace Incremental.Common.Messaging
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Incremental.Common.Queues
+namespace Incremental.Common.Messaging
 {
     /// <summary>
     ///     Group reference.

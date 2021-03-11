@@ -3,8 +3,6 @@ using Amazon;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.SQS;
-using Incremental.Common.Messaging.Client;
-using Incremental.Common.Messaging.Messages;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -13,13 +13,13 @@ using Microsoft.Extensions.Options;
 
 namespace Incremental.Common.Messaging.Hosted.Hosted
 {
-    internal class QueueHostedService : BackgroundService
+    internal class MessagingHostedService : BackgroundService
     {
-        private readonly ILogger<QueueHostedService> _logger;
+        private readonly ILogger<MessagingHostedService> _logger;
         private readonly MessagingOptions _options;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public QueueHostedService(ILogger<QueueHostedService> logger, IServiceScopeFactory scopeFactory, IOptions<MessagingOptions> options)
+        public MessagingHostedService(ILogger<MessagingHostedService> logger, IServiceScopeFactory scopeFactory, IOptions<MessagingOptions> options)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;

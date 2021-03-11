@@ -39,7 +39,7 @@ namespace Incremental.Common.Messaging.Hosted
 
                 services.AddMediatR(assemblies);
                 
-                services.AddHostedService<QueueHostedService>();
+                services.AddHostedService<MessagingHostedService>();
             }
 
             return services;

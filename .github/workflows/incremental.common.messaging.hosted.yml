@@ -31,13 +31,13 @@ jobs:
         with:
           dotnet-version: 5.0.103
       - name: Restore
-        working-directory: ./src/$PROJECT_NAME
+        working-directory: ./src
         run: dotnet restore
       - name: Build
-        working-directory: ./src/$PROJECT_NAME
+        working-directory: ./src
         run: dotnet build -c Release --no-restore
       - name: Test
-        working-directory: ./src/$PROJECT_NAME
+        working-directory: ./src
         run: dotnet test -c Release
       - name: Pack
         if: matrix.os == 'ubuntu-latest'

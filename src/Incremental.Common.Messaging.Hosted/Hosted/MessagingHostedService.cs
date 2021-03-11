@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Incremental.Common.Messaging.Hosted.Options;
+using Incremental.Common.Messaging.Hosted.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,13 +15,17 @@ namespace Incremental.Common.Messaging.Hosted.Hosted
     internal class MessagingHostedService : BackgroundService
     {
         private readonly ILogger<MessagingHostedService> _logger;
-        private readonly MessagingOptions _options;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IMessageDeserializer _messageDeserializer;
+        private readonly MessagingOptions _options;
 
-        public MessagingHostedService(ILogger<MessagingHostedService> logger, IServiceScopeFactory scopeFactory, IOptions<MessagingOptions> options)
+        public MessagingHostedService(ILogger<MessagingHostedService> logger, IServiceScopeFactory scopeFactory,
+            IMessageDeserializer messageDeserializer, IOptions<MessagingOptions> options
+        )
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
+            _messageDeserializer = messageDeserializer;
             _options = options.Value;
         }
 
@@ -54,28 +59,35 @@ namespace Incremental.Common.Messaging.Hosted.Hosted
                             continue;
                         }
 
-                        await TryHandleMessage(message, cancellationTokenSource);
+                        try
+                        {
+                            await TryHandleMessage(message, cancellationTokenSource);
 
-                        messagesInQueue--;
+                            messagesInQueue--;
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e, "Unhandled exception handling {@Message}", message);
+                        }
                     }
                 }
             }
             catch (Exception e)
             {
-                _logger.LogCritical(e, "Unhandled critical exception receiving external events from queue");
+                _logger.LogCritical(e, "Unhandled critical exception handling message queue");
             }
         }
 
-        private async Task TryHandleMessage((string body, string type, (string queue, string id) receipt) message,
+        private async Task TryHandleMessage((string Body, string Type, (string Queue, string Id) receipt) message,
             CancellationTokenSource cancellationTokenSource)
         {
-            if (MessageTypeIsRegistered(message, out var type))
+            if (_messageDeserializer.TryGetType(message.Type, out var type))
             {
                 using var innerServiceScope = _scopeFactory.CreateScope();
 
                 var sender = innerServiceScope.ServiceProvider.GetRequiredService<ISender>();
 
-                if (JsonSerializer.Deserialize(message.body, type) is Message request)
+                if (JsonSerializer.Deserialize(message.Body, type) is Message request)
                 {
                     request = request with {Receipt = message.receipt};
 
@@ -89,11 +101,6 @@ namespace Incremental.Common.Messaging.Hosted.Hosted
                     }
                 }
             }
-        }
-
-        private bool MessageTypeIsRegistered((string body, string type, (string queue, string id) receipt) message, out Type type)
-        {
-            return _options.SupportedMessageTypes.TryGetValue(message.type ?? string.Empty, out type);
         }
     }
 }

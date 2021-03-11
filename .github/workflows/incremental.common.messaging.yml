@@ -16,6 +16,7 @@ env:
   GITHUB_FEED: https://nuget.pkg.github.com/incrementalfun/
   GITHUB_USER: incrementalbot
   GITHUB_TOKEN: ${{ secrets.GPM_TOKEN }}
+  NUGET_AUTH_TOKEN: ${{ secrets.GPM_TOKEN }}
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -72,6 +73,7 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.103
+          source-url: ${{ env.GITHUB_FEED }}/index.json
       - name: Create Release NuGet package
         run: |
           arrTag=(${GITHUB_REF//\// })

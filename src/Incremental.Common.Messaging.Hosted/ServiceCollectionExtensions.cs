@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Incremental.Common.Messaging.Handling;
 using Incremental.Common.Messaging.Hosted.Hosted;
 using Incremental.Common.Messaging.Hosted.Options;
+using Incremental.Common.Messaging.Hosted.Services;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Incremental.Common.Messaging.Hosted
@@ -18,25 +21,39 @@ namespace Incremental.Common.Messaging.Hosted
         ///     Registers a hosted service to handle incoming messages of a specific queue.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to attach to.</param>
-        /// <param name="hostedOptions">Hosted options.</param>
+        /// <param name="configuration">The <see cref="IConfiguration"/> to source <see cref="MessagingOptions"/>.</param>
         /// <param name="assemblies">All assemblies with handlers.</param>
         /// <returns><see cref="IServiceCollection"/></returns>
         /// <exception cref="ArgumentException">When the queue endpoint is null or empty.</exception>
-        public static IServiceCollection AddMessagingHostedServices(this IServiceCollection services, Action<MessagingOptions> hostedOptions, params Assembly[] assemblies)
+        public static IServiceCollection AddMessagingHostedServices(this IServiceCollection services, IConfiguration configuration,
+            params Assembly[] assemblies)
         {
-            var options = new MessagingOptions();
+            services.Configure<MessagingOptions>(configuration.GetSection(MessagingOptions.Messaging));
 
-            hostedOptions.Invoke(options);
+            services.AddMediatR(assemblies);
 
-            if (string.IsNullOrWhiteSpace(options.QueueEndpoint)) throw new ArgumentException("Queue endpoint is a required argument.");
+            var messageHandlers = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => assembly.GetTypes())
+                .Where(type => type.BaseType?.IsGenericType ?? false)
+                .Where(type => type.BaseType.GetGenericTypeDefinition() == typeof(MessageHandler<>))
+                .ToList();
 
-            if (options.SupportedMessageTypes.Any() && options.SupportedMessageTypes.Values.All(t => t.IsAssignableTo(typeof(Message))))
+            if (messageHandlers.Any())
             {
-                foreach (var registeredMessageType in options.SupportedMessageTypes.Values)
-                    services.AddScoped(typeof(Message), registeredMessageType);
-
-                services.AddMediatR(assemblies);
+                var supportedMessages = new Dictionary<string, Type>();
                 
+                foreach (var handler in messageHandlers)
+                {
+                    var handledMessage = handler.BaseType?.GenericTypeArguments.FirstOrDefault();
+                    
+                    if (handledMessage?.BaseType is not null && handledMessage.BaseType == typeof(Message))
+                    {
+                        supportedMessages.TryAdd(handledMessage.BaseType.FullName, handledMessage.BaseType);
+                    }
+                }
+
+                services.AddTransient<IMessageDeserializer>(_ => new MessageDeserializer(supportedMessages));
+
                 services.AddHostedService<MessagingHostedService>();
             }
 

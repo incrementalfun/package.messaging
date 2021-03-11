@@ -1,4 +1,4 @@
-name: Build & Publish - Incremental.Common.Queues.Messaging
+name: Build & Publish - Incremental.Common.Messaging.Hosted
 on:
   push:
   pull_request:

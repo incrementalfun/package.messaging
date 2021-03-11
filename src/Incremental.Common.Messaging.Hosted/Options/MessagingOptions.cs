@@ -8,11 +8,8 @@ namespace Incremental.Common.Messaging.Hosted.Options
     /// </summary>
     public class MessagingOptions
     {
-        internal MessagingOptions()
-        {
-            SupportedMessageTypes = new Dictionary<string, Type>();
-        }
-
+        public static string Messaging = "Messaging";
+        
         /// <summary>
         ///     Queue endpoint.
         /// </summary>
@@ -22,24 +19,5 @@ namespace Incremental.Common.Messaging.Hosted.Options
         ///     Event bus.
         /// </summary>
         public string EventBus { get; set; }
-
-        /// <summary>
-        ///     Types of messages that this queue will handle.
-        /// </summary>
-        /// <remarks>
-        ///     To add a message type to this collection please use ConfigureSupportFor.
-        /// </remarks>
-        public readonly Dictionary<string, Type> SupportedMessageTypes;
-
-        /// <summary>
-        /// Adds a message type to the collection of supported types.
-        /// </summary>
-        /// <typeparam name="TMessage"></typeparam>
-        public void ConfigureSupportFor<TMessage>() where TMessage : Message
-        {
-            SupportedMessageTypes.TryAdd(typeof(TMessage).FullName, typeof(TMessage));
-        }
-        
-        
     }
 }

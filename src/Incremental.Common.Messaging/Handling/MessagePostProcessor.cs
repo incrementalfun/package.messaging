@@ -33,9 +33,17 @@ namespace Incremental.Common.Messaging.Handling
         /// <param name="message"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task Success(TMessage message, CancellationToken cancellationToken = default)
+        public async Task Success(TMessage message, CancellationToken cancellationToken = default)
         {
-            return _messageSender.MarkAsDelivered(message.Receipt.Queue, message.Receipt.Id, cancellationToken);
+            await _messageSender.MarkAsDelivered(message.Receipt.Queue, message.Receipt.Id, cancellationToken);
+
+            if (message.HasFollowingSteps)
+            {
+                foreach (var step in message.FollowingSteps())
+                {
+                    await _messageSender.Send(message.Receipt.Queue, message, "default", cancellationToken);
+                }
+            }
         }
     }
 }

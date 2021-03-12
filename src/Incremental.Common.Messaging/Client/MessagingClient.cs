@@ -14,37 +14,39 @@ namespace Incremental.Common.Messaging.Client
     {
         private readonly ILogger<MessagingClient> _logger;
         private readonly IAmazonSQS _sqs;
+        private readonly string _queue;
 
-        public MessagingClient(ILogger<MessagingClient> logger, IAmazonSQS sqs)
+        public MessagingClient(ILogger<MessagingClient> logger, IAmazonSQS sqs, string queue)
         {
             _logger = logger;
             _sqs = sqs;
+            _queue = queue;
         }
 
-        public async Task<int> Count(string queue, CancellationToken cancellationToken = default)
+        public async Task<int> Count(CancellationToken cancellationToken = default)
         {
-            var attributes = await _sqs.GetQueueAttributesAsync(queue,
+            var attributes = await _sqs.GetQueueAttributesAsync(_queue,
                 new List<string> {QueueAttributeName.ApproximateNumberOfMessages},
                 cancellationToken);
 
             return attributes.ApproximateNumberOfMessages;
         }
 
-        public async Task<TimeSpan> GetVisibilityTimeSpan(string queue, CancellationToken cancellationToken = default)
+        public async Task<TimeSpan> GetVisibilityTimeSpan(CancellationToken cancellationToken = default)
         {
             var desiredAttributes = new List<string> {QueueAttributeName.VisibilityTimeout};
 
-            var queueAttributes = await _sqs.GetQueueAttributesAsync(queue, desiredAttributes, cancellationToken);
+            var queueAttributes = await _sqs.GetQueueAttributesAsync(_queue, desiredAttributes, cancellationToken);
 
             return TimeSpan.FromSeconds(queueAttributes.VisibilityTimeout);
         }
 
-        public async Task<(string body, string type, (string queue, string id) receipt)> Receive(string queue, int quantity,
+        public async Task<(string body, string type, (string queue, string id) receipt)> Receive(int quantity,
             CancellationToken cancellationToken = default)
         {
             var response = await _sqs.ReceiveMessageAsync(new ReceiveMessageRequest
             {
-                QueueUrl = (await _sqs.GetQueueUrlAsync(queue, cancellationToken)).QueueUrl,
+                QueueUrl = _queue,
                 MaxNumberOfMessages = 1,
                 MessageAttributeNames = new List<string> {nameof(Type)}
             }, cancellationToken);
@@ -54,27 +56,27 @@ namespace Incremental.Common.Messaging.Client
             var message = response.Messages.First();
 
             if (message.MessageAttributes.TryGetValue(nameof(Type), out var typeAttribute) && !string.IsNullOrWhiteSpace(typeAttribute.StringValue))
-                return (message.Body, typeAttribute.StringValue, (queue, message.ReceiptHandle));
+                return (message.Body, typeAttribute.StringValue, (_queue, message.ReceiptHandle));
 
             return default;
         }
 
-        public async Task Send(string queue, Message message, string groupId, CancellationToken cancellationToken = default)
+        public async Task Send(Message message, string groupId, CancellationToken cancellationToken = default)
         {
             var type = message.GetType().FullName;
             var body = JsonSerializer.Serialize(message as object);
 
-            await Send(queue, body, type, groupId, cancellationToken);
+            await Send(body, type, groupId, cancellationToken);
         }
 
-        public async Task MarkAsDelivered(string queue, string receiptHandle, CancellationToken cancellationToken = default)
+        public async Task MarkAsDelivered(string receiptHandle, CancellationToken cancellationToken = default)
         {
-            await _sqs.DeleteMessageAsync(queue, receiptHandle, cancellationToken);
+            await _sqs.DeleteMessageAsync(_queue, receiptHandle, cancellationToken);
         }
 
-        private async Task Send(string queue, string body, string type, string groupId, CancellationToken cancellationToken)
+        private async Task Send(string body, string type, string groupId, CancellationToken cancellationToken)
         {
-            var response = await _sqs.SendMessageAsync(new SendMessageRequest(queue, body)
+            var response = await _sqs.SendMessageAsync(new SendMessageRequest(_queue, body)
             {
                 MessageGroupId = groupId,
                 MessageDeduplicationId = Guid.NewGuid().ToString(),

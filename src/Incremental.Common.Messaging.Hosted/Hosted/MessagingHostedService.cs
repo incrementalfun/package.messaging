@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Incremental.Common.Messaging.Client;
 using Incremental.Common.Messaging.Hosted.Options;
 using Incremental.Common.Messaging.Hosted.Services;
 using MediatR;
@@ -35,21 +36,22 @@ namespace Incremental.Common.Messaging.Hosted.Hosted
 
             try
             {
-                var queueReceiver = outerServiceScope.ServiceProvider.GetRequiredService<IMessageReceiver>();
+                var queueReceiver = await outerServiceScope.ServiceProvider.GetRequiredService<IMessagingClientFactory>()
+                    .GetReceiver(_options.QueueEndpoint, stoppingToken);
 
-                var visibility = await queueReceiver.GetVisibilityTimeSpan(_options.QueueEndpoint, stoppingToken);
+                var visibility = await queueReceiver.GetVisibilityTimeSpan(stoppingToken);
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     await Task.Delay(5000, stoppingToken);
 
-                    var messagesInQueue = await queueReceiver.Count(_options.QueueEndpoint, stoppingToken);
+                    var messagesInQueue = await queueReceiver.Count(stoppingToken);
 
                     while (messagesInQueue > 0)
                     {
                         _logger.LogDebug("{MessageCount} messages in queue", messagesInQueue);
 
-                        var message = await queueReceiver.Receive(_options.QueueEndpoint, 1, stoppingToken);
+                        var message = await queueReceiver.Receive(1, stoppingToken);
 
                         var cancellationTokenSource = new CancellationTokenSource(visibility.Subtract(TimeSpan.FromSeconds(5)));
 

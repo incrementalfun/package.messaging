@@ -37,7 +37,7 @@ namespace Incremental.Common.Messaging.Hosted.Hosted
             try
             {
                 var queueReceiver = await outerServiceScope.ServiceProvider.GetRequiredService<IMessagingClientFactory>()
-                    .GetReceiver(_options.QueueEndpoint, stoppingToken);
+                    .GetReceiver(_options.Queue, stoppingToken);
 
                 var visibility = await queueReceiver.GetVisibilityTimeSpan(stoppingToken);
 

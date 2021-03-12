@@ -8,12 +8,15 @@ namespace Incremental.Common.Messaging.Hosted.Options
     /// </summary>
     public class MessagingOptions
     {
-        public static string Messaging = "Messaging";
+        /// <summary>
+        ///     Key for the configuration provider.
+        /// </summary>
+        public static readonly string Messaging = "Messaging";
         
         /// <summary>
         ///     Queue endpoint.
         /// </summary>
-        public string QueueEndpoint { get; set; }
+        public string Queue { get; set; }
         
         /// <summary>
         ///     Event bus.

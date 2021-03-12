@@ -37,8 +37,8 @@ namespace Incremental.Common.Messaging
         {
             services.AddAWSService<IAmazonSQS>();
             
-            services.AddScoped<IMessageSender, MessagingQueueClient>();
-            services.AddScoped<IMessageReceiver, MessagingQueueClient>();
+            services.AddScoped<IMessageSender, MessagingClient>();
+            services.AddScoped<IMessageReceiver, MessagingClient>();
 
             return services;
         }

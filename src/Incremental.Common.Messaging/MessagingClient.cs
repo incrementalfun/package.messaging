@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using Microsoft.Extensions.Logging;
-using Message = Incremental.Common.Messaging.Message;
 
 namespace Incremental.Common.Messaging
 {
-    internal class MessagingQueueClient : IMessageSender, IMessageReceiver
+    internal class MessagingClient : IMessageSender, IMessageReceiver
     {
-        private readonly ILogger<MessagingQueueClient> _logger;
+        private readonly ILogger<MessagingClient> _logger;
         private readonly IAmazonSQS _sqs;
 
-        public MessagingQueueClient(ILogger<MessagingQueueClient> logger, IAmazonSQS sqs)
+        public MessagingClient(ILogger<MessagingClient> logger, IAmazonSQS sqs)
         {
             _logger = logger;
             _sqs = sqs;
@@ -45,7 +44,7 @@ namespace Incremental.Common.Messaging
         {
             var response = await _sqs.ReceiveMessageAsync(new ReceiveMessageRequest
             {
-                QueueUrl = queue,
+                QueueUrl = (await _sqs.GetQueueUrlAsync(queue, cancellationToken)).QueueUrl,
                 MaxNumberOfMessages = 1,
                 MessageAttributeNames = new List<string> {nameof(Type)}
             }, cancellationToken);

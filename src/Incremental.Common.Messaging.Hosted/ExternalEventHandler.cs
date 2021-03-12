@@ -16,8 +16,8 @@ namespace Incremental.Common.Messaging.Hosted
     internal class ExternalEventHandler<TExternalEvent> : IEventHandler<TExternalEvent> where TExternalEvent : IExternalEvent
     {
         private readonly IAmazonEventBridge _eventBridge;
-        private readonly MessagingOptions _options;
         private readonly ILogger _logger;
+        private readonly MessagingOptions _options;
 
         public ExternalEventHandler(IAmazonEventBridge eventBridge, IOptions<MessagingOptions> options, ILogger logger)
         {

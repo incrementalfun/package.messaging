@@ -16,9 +16,9 @@ namespace Incremental.Common.Messaging.Hosted.Hosted
     internal class MessagingHostedService : BackgroundService
     {
         private readonly ILogger<MessagingHostedService> _logger;
-        private readonly IServiceScopeFactory _scopeFactory;
         private readonly IMessageDeserializer _messageDeserializer;
         private readonly MessagingOptions _options;
+        private readonly IServiceScopeFactory _scopeFactory;
 
         public MessagingHostedService(ILogger<MessagingHostedService> logger, IServiceScopeFactory scopeFactory,
             IMessageDeserializer messageDeserializer, IOptions<MessagingOptions> options

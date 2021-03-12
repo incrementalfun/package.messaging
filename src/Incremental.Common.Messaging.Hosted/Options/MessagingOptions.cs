@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Incremental.Common.Messaging.Hosted.Options
+﻿namespace Incremental.Common.Messaging.Hosted.Options
 {
     /// <summary>
     ///     Common options for hosted queue service.
@@ -12,12 +9,12 @@ namespace Incremental.Common.Messaging.Hosted.Options
         ///     Key for the configuration provider.
         /// </summary>
         public static readonly string Messaging = "Messaging";
-        
+
         /// <summary>
         ///     Queue endpoint.
         /// </summary>
         public string Queue { get; set; }
-        
+
         /// <summary>
         ///     Event bus.
         /// </summary>

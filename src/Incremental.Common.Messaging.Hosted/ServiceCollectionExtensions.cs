@@ -20,10 +20,12 @@ namespace Incremental.Common.Messaging.Hosted
         /// <summary>
         ///     Registers a hosted service to handle incoming messages of a specific queue.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/> to attach to.</param>
-        /// <param name="configuration">The <see cref="IConfiguration"/> to source <see cref="MessagingOptions"/>.</param>
+        /// <param name="services">The <see cref="IServiceCollection" /> to attach to.</param>
+        /// <param name="configuration">The <see cref="IConfiguration" /> to source <see cref="MessagingOptions" />.</param>
         /// <param name="assemblies">All assemblies with handlers.</param>
-        /// <returns><see cref="IServiceCollection"/></returns>
+        /// <returns>
+        ///     <see cref="IServiceCollection" />
+        /// </returns>
         /// <exception cref="ArgumentException">When the queue endpoint is null or empty.</exception>
         public static IServiceCollection AddMessagingHostedServices(this IServiceCollection services, IConfiguration configuration,
             params Assembly[] assemblies)
@@ -41,15 +43,13 @@ namespace Incremental.Common.Messaging.Hosted
             if (messageHandlers.Any())
             {
                 var supportedMessages = new Dictionary<string, Type>();
-                
+
                 foreach (var handler in messageHandlers)
                 {
                     var handledMessage = handler.BaseType?.GenericTypeArguments.FirstOrDefault();
-                    
+
                     if (handledMessage?.BaseType is not null && handledMessage.BaseType == typeof(Message))
-                    {
                         supportedMessages.TryAdd(handledMessage.BaseType.FullName, handledMessage.BaseType);
-                    }
                 }
 
                 services.AddTransient<IMessageDeserializer>(_ => new MessageDeserializer(supportedMessages));

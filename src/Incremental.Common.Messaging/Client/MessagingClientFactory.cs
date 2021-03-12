@@ -18,7 +18,6 @@ namespace Incremental.Common.Messaging.Client
         public async Task<IMessageSender> GetSender(string queue, CancellationToken cancellationToken = default)
         {
             return await GetMessagingClient(queue, cancellationToken);
-
         }
 
         public async Task<IMessageReceiver> GetReceiver(string queue, CancellationToken cancellationToken = default)

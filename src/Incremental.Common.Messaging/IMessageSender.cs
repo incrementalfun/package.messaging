@@ -11,9 +11,11 @@ namespace Incremental.Common.Messaging
         /// <summary>
         ///     Sends an event to the queues.
         /// </summary>
-        /// <param name="message"><see cref="Message"/> to send.</param>
+        /// <param name="message"><see cref="Message" /> to send.</param>
         /// <param name="groupId"></param>
-        /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+        /// <param name="cancellationToken">
+        ///     <see cref="CancellationToken" />
+        /// </param>
         /// <returns></returns>
         public Task Send(Message message, string groupId, CancellationToken cancellationToken = default);
 
@@ -21,7 +23,9 @@ namespace Incremental.Common.Messaging
         ///     Marks a retrieved message as delivered.
         /// </summary>
         /// <param name="receiptHandle">Receipt identifier used to mark a message as delivered.</param>
-        /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+        /// <param name="cancellationToken">
+        ///     <see cref="CancellationToken" />
+        /// </param>
         /// <returns></returns>
         public Task MarkAsDelivered(string receiptHandle, CancellationToken cancellationToken = default);
     }

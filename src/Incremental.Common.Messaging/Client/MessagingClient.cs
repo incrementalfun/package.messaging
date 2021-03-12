@@ -13,8 +13,8 @@ namespace Incremental.Common.Messaging.Client
     internal class MessagingClient : IMessageSender, IMessageReceiver
     {
         private readonly ILogger<MessagingClient> _logger;
-        private readonly IAmazonSQS _sqs;
         private readonly string _queue;
+        private readonly IAmazonSQS _sqs;
 
         public MessagingClient(ILogger<MessagingClient> logger, IAmazonSQS sqs, string queue)
         {

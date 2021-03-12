@@ -1,10 +1,8 @@
-﻿using System.Reflection;
-using Amazon;
+﻿using Amazon;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.SQS;
 using Incremental.Common.Messaging.Client;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,9 +16,11 @@ namespace Incremental.Common.Messaging
         /// <summary>
         ///     Configures all the related services necessary for queues to work. Credentials are sourced from configuration automatically.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/> to attach to.</param>
-        /// <param name="configuration">The <see cref="IConfiguration"/> to source configuration from.</param>
-        /// <returns><see cref="IServiceCollection"/></returns>
+        /// <param name="services">The <see cref="IServiceCollection" /> to attach to.</param>
+        /// <param name="configuration">The <see cref="IConfiguration" /> to source configuration from.</param>
+        /// <returns>
+        ///     <see cref="IServiceCollection" />
+        /// </returns>
         public static IServiceCollection AddMessaging(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDefaultAWSOptions(new AWSOptions
@@ -37,7 +37,7 @@ namespace Incremental.Common.Messaging
         private static IServiceCollection RegisterQueues(this IServiceCollection services)
         {
             services.AddAWSService<IAmazonSQS>();
-            
+
             services.AddScoped<IMessagingClientFactory, MessagingClientFactory>();
 
             return services;

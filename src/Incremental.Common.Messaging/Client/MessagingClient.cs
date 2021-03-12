@@ -8,7 +8,7 @@ using Amazon.SQS;
 using Amazon.SQS.Model;
 using Microsoft.Extensions.Logging;
 
-namespace Incremental.Common.Messaging
+namespace Incremental.Common.Messaging.Client
 {
     internal class MessagingClient : IMessageSender, IMessageReceiver
     {

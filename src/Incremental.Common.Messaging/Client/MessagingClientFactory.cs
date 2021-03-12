@@ -1,6 +1,9 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
+using Amazon.SQS.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -32,9 +35,11 @@ namespace Incremental.Common.Messaging.Client
             var logger = scope.ServiceProvider.GetRequiredService<ILogger<MessagingClient>>();
             var sqs = scope.ServiceProvider.GetRequiredService<IAmazonSQS>();
 
-            var response = await sqs.GetQueueUrlAsync(queue, cancellationToken);
+            var queueUrl = Uri.TryCreate(queue, UriKind.Absolute, out _)
+                ? queue
+                : (await sqs.ListQueuesAsync(queue, cancellationToken)).QueueUrls.First();
 
-            return new MessagingClient(logger, sqs, response.QueueUrl);
+            return new MessagingClient(logger, sqs, queueUrl);
         }
     }
 }

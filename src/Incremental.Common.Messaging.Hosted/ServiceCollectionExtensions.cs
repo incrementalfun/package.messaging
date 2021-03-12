@@ -49,7 +49,7 @@ namespace Incremental.Common.Messaging.Hosted
                     var handledMessage = handler.BaseType?.GenericTypeArguments.FirstOrDefault();
 
                     if (handledMessage?.BaseType is not null && handledMessage.BaseType == typeof(Message))
-                        supportedMessages.TryAdd(handledMessage.BaseType.FullName, handledMessage.BaseType);
+                        supportedMessages.TryAdd(handledMessage.FullName, handledMessage);
                 }
 
                 services.AddTransient<IMessageDeserializer>(_ => new MessageDeserializer(supportedMessages));

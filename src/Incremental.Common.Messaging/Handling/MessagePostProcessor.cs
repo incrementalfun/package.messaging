@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Incremental.Common.Messaging.Client;
 using MediatR;
 using MediatR.Pipeline;
 
@@ -11,16 +12,17 @@ namespace Incremental.Common.Messaging.Handling
     /// <typeparam name="TMessage"></typeparam>
     public abstract class MessagePostProcessor<TMessage> : IRequestPostProcessor<TMessage, Unit> where TMessage : Message
     {
-        private readonly IMessageSender _messageSender;
+        private readonly IMessagingClientFactory _messagingClientFactory;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="messageSender"><see cref="IMessageSender"/></param>
-        public MessagePostProcessor(IMessageSender messageSender)
+        /// <param name="messagingClientFactory"></param>
+        public MessagePostProcessor(IMessagingClientFactory messagingClientFactory)
         {
-            _messageSender = messageSender;
+            _messagingClientFactory = messagingClientFactory;
         }
+
 
         /// <inheritdoc />
         public abstract Task Process(TMessage message, Unit response, CancellationToken cancellationToken);
@@ -33,13 +35,15 @@ namespace Incremental.Common.Messaging.Handling
         /// <returns></returns>
         public async Task Success(TMessage message, CancellationToken cancellationToken = default)
         {
-            await _messageSender.MarkAsDelivered(message.Receipt.Queue, message.Receipt.Id, cancellationToken);
+            var sender = await _messagingClientFactory.GetSender(message.Receipt.Queue, cancellationToken);
+            
+            await sender.MarkAsDelivered(message.Receipt.Id, cancellationToken);
 
             if (message.HasFollowingSteps)
             {
                 foreach (var step in message.FollowingSteps())
                 {
-                    await _messageSender.Send(message.Receipt.Queue, message, Groups.Default, cancellationToken);
+                    await sender.Send(message, Groups.Default, cancellationToken);
                 }
             }
         }

@@ -4,27 +4,25 @@ using System.Threading.Tasks;
 namespace Incremental.Common.Messaging
 {
     /// <summary>
-    ///     Queue sender service.
+    ///     Messaging sender service.
     /// </summary>
     public interface IMessageSender
     {
         /// <summary>
         ///     Sends an event to the queues.
         /// </summary>
-        /// <param name="queue"></param>
-        /// <param name="message"></param>
+        /// <param name="message"><see cref="Message"/> to send.</param>
         /// <param name="groupId"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
         /// <returns></returns>
-        public Task Send(string queue, Message message, string groupId, CancellationToken cancellationToken = default);
+        public Task Send(Message message, string groupId, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Marks a retrieved message as delivered.
         /// </summary>
-        /// <param name="queue"></param>
-        /// <param name="receiptHandle"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="receiptHandle">Receipt identifier used to mark a message as delivered.</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
         /// <returns></returns>
-        public Task MarkAsDelivered(string queue, string receiptHandle, CancellationToken cancellationToken = default);
+        public Task MarkAsDelivered(string receiptHandle, CancellationToken cancellationToken = default);
     }
 }

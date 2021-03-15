@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using MediatR;
 
 namespace Incremental.Common.Messaging
@@ -9,14 +10,14 @@ namespace Incremental.Common.Messaging
     /// </summary>
     public record Message : IRequest
     {
-        private readonly IList<Message> _innerQueue;
+        private readonly IList<(string Type, string Message)> _innerQueue;
 
         /// <summary>
         ///     Default constructor.
         /// </summary>
         public Message()
         {
-            _innerQueue = new List<Message>();
+            _innerQueue = new List<(string, string)>();
         }
 
         /// <summary>
@@ -32,16 +33,16 @@ namespace Incremental.Common.Messaging
         /// <summary>
         ///     
         /// </summary>
-        public IEnumerable<Message> FollowingSteps => _innerQueue;
+        public IEnumerable<(string Type, string Message)> FollowingSteps => _innerQueue;
 
 
         /// <summary>
         ///     Sets up a message to fire if the initial message is a success.
         /// </summary>
         /// <param name="message"></param>
-        public void FollowUpWith(Message message)
+        public void FollowUpWith<TMessage>(TMessage message) where TMessage : Message
         {
-            _innerQueue.Add(message);
+            _innerQueue.Add((typeof(TMessage).FullName, JsonSerializer.Serialize(message)));
         }
     }
 }

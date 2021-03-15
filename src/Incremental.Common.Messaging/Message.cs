@@ -22,12 +22,17 @@ namespace Incremental.Common.Messaging
         /// <summary>
         ///     True if there are any messages to be launched as a follow up to this message.
         /// </summary>
-        public bool HasFollowingSteps => _innerQueue.Any();
+        public bool HasFollowingSteps() => _innerQueue.Any();
 
         /// <summary>
         ///     Receipt of the message in the queue.
         /// </summary>
         public (string Queue, string Id) Receipt { get; init; }
+        
+        /// <summary>
+        ///     
+        /// </summary>
+        public IEnumerable<Message> FollowingSteps => _innerQueue;
 
 
         /// <summary>
@@ -37,14 +42,6 @@ namespace Incremental.Common.Messaging
         public void FollowUpWith(Message message)
         {
             _innerQueue.Add(message);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Message> FollowingSteps()
-        {
-            return _innerQueue;
         }
     }
 }

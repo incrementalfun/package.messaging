@@ -39,8 +39,8 @@ namespace Incremental.Common.Messaging.Handling
 
             await sender.MarkAsDelivered(message.Receipt.Id, cancellationToken);
 
-            if (message.HasFollowingSteps)
-                foreach (var step in message.FollowingSteps())
+            if (message.HasFollowingSteps())
+                foreach (var step in message.FollowingSteps)
                     await sender.Send(message, Groups.Default, cancellationToken);
         }
     }

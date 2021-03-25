@@ -38,10 +38,6 @@ namespace Incremental.Common.Messaging.Handling
             var sender = await _messagingClientFactory.GetSender(message.Receipt.Queue, cancellationToken);
 
             await sender.MarkAsDelivered(message.Receipt.Id, cancellationToken);
-
-            if (message.HasFollowingSteps())
-                foreach (var step in message.FollowingSteps)
-                    await sender.Send(message, Groups.Default, cancellationToken);
         }
     }
 }

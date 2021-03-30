@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using MassTransit;
+﻿using MassTransit;
 
 namespace Incremental.Common.Messaging
 {
@@ -7,8 +6,7 @@ namespace Incremental.Common.Messaging
     ///     Message handler.
     /// </summary>
     /// <typeparam name="TMessage">Derived of <see cref="Message"/></typeparam>
-    public abstract class MessageHandler<TMessage> : IConsumer<TMessage> where TMessage: Message
+    public interface IMessageHandler<in TMessage> : IConsumer<TMessage> where TMessage: Message
     {
-        public abstract Task Consume(ConsumeContext<TMessage> context);
     }
 }

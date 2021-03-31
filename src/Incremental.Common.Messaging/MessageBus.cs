@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Incremental.Common.Messaging
 {
-    public class MessageBus : IMessageBus
+    internal class MessageBus : IMessageBus
     {
         private readonly ILogger<MessageBus> _logger;
         private readonly IBus _internalBus;
@@ -15,10 +15,12 @@ namespace Incremental.Common.Messaging
             _logger = logger;
             _internalBus = internalBus;
         }
-
+        
         public async Task Send<TMessage>(TMessage message, CancellationToken cancellationToken = default) where TMessage : Message
         {
-            await _internalBus.Send(message, cancellationToken);
+            _logger.LogDebug("Sending {@Message}", message);
+            
+            await _internalBus.Publish(message, cancellationToken);
         }
     }
 }

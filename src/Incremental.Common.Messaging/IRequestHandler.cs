@@ -16,9 +16,9 @@ namespace Incremental.Common.Messaging
         /// <param name="context"></param>
         /// <param name="response"></param>
         /// <returns></returns>
-        protected async Task Respond(ConsumeContext<TRequest> context, TResponse response)
+        async Task Respond(ConsumeContext<TRequest> context, TResponse response)
         {
-            await context.RespondAsync<TResponse>(response);
+            await context.RespondAsync(response);
         }
     }
 }

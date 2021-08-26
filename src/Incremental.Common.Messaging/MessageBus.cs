@@ -7,8 +7,8 @@ namespace Incremental.Common.Messaging
 {
     internal class MessageBus : IMessageBus
     {
-        private readonly ILogger<MessageBus> _logger;
         private readonly IBus _internalBus;
+        private readonly ILogger<MessageBus> _logger;
 
         public MessageBus(ILogger<MessageBus> logger, IBus internalBus)
         {

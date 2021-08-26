@@ -1,7 +1,7 @@
 namespace Incremental.Common.Messaging
 {
     /// <summary>
-    /// External Event.
+    ///     External Event.
     /// </summary>
     public record ExternalEvent
     {

@@ -5,6 +5,5 @@
     /// </summary>
     public record Message
     {
-        
     }
 }

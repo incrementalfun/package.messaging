@@ -1,18 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Nullable>enable</Nullable>
         <Title>Incremental.Common.Messaging</Title>
         <Description>Common resources for working with messages.</Description>
         <Authors>Lucas Maximiliano Marino</Authors>
         <PackageProjectUrl>https://github.com/incrementalfun/package.messaging</PackageProjectUrl>
         <RepositoryUrl>https://github.com/incrementalfun/package.messaging</RepositoryUrl>
-        <Copyright>Copyright © Lucas Maximiliano Marino 2021</Copyright>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Copyright>Copyright © Lucas Maximiliano Marino 2022</Copyright>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.3" />
+        <None Include="../../README.md" Pack="true" PackagePath="/"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.0" />
     </ItemGroup>
 
 </Project>
